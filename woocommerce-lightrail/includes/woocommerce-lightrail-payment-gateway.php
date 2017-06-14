@@ -12,8 +12,8 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 
 			$this->init_form_fields();
 
-			$this->title        = $this->get_option( 'title' );
-			$this->description  = $this->get_option( 'description' );
+			$this->title       = $this->get_option( 'title' );
+			$this->description = $this->get_option( 'description' );
 			//$this->instructions = $this->get_option( 'instructions' );
 
 			//add_action( 'woocommerce_thankyou', array( $this, 'thankyou_page' ) );
@@ -127,14 +127,16 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 
 				$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $this->get_option( 'api_key' ) );
 
-				$code_currency  = $available_credit_object['currency'];
+				$code_currency  = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENCY ];
 				$order_currency = get_option( 'woocommerce_currency' );
 				if ( $code_currency !== $order_currency ) {
-					$error_msg = sprintf( __( 'Currency mismatch. Attempting to pay %s value with %s.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $order_currency, $code_currency );
+					$error_msg = sprintf( __( 'Currency mismatch. Attempting to pay %s value with %s.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
+						$order_currency, $code_currency );
 					throw new Exception( $error_msg );
 				}
 
-				$available_credit = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $available_credit_object['currentValue'], $order_currency );
+				$code_current_value = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENT_VALUE ];
+				$available_credit   = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_current_value, $order_currency );
 				if ( ! ( $available_credit > 0 ) ) {
 					$error_msg = __( 'Insufficient value on the gift code.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
 					write_log( 'Insufficient value on gift code. ' . $available_credit );
@@ -174,7 +176,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 						'redirect' => $this->get_return_url( $order ),
 					);
 				} else { //we're not done paying. go back to the payment page to pay the remaining balance.
-					write_log(sprintf('remaining balance on order #%s: %s', $order->get_id(), WC_Lightrail_Metadata::get_order_balance( $order )));
+					write_log( sprintf( 'remaining balance on order #%s: %s', $order->get_id(), WC_Lightrail_Metadata::get_order_balance( $order ) ) );
 					$order->set_total( WC_Lightrail_Metadata::get_order_balance( $order ) );
 					$order->save();
 

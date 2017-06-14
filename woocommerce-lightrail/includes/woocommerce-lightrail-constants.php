@@ -51,11 +51,13 @@ if (!class_exists('WC_Lightrail_API_Constants')) {
             const TRANSACTION_ID = 'transactionId';
             const TRANSACTION_CURRENCY = 'currency';
             const TRANSACTION_VALUE = 'value';
+            const TRANSACTION_CURRENT_VALUE = 'currentValue';
             const TRANSACTION_METADATA = 'metadata';
             const TRANSACTION_PENDING = 'pending';
             const TRANSACTION_PENDING_CAPTURE = 'capture';
             const TRANSACTION_PENDING_VOID = 'void';
             const TRANSACTION_CODE_LAST_FOUR='codeLastFour';
+
 
             const ENDPOINT_PING= '/ping';
             const ENDPOINT_BALANCE = '/codes/%s/balance';
