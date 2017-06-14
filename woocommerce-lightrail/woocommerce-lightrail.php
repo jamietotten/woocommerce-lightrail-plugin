@@ -13,7 +13,7 @@ License: TBD
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} // Exit if accessed directly
+}
 
 define( 'WC_LIGHTRAIL_MIN_PHP_VER', '7.0.0' );
 define( 'WC_LIGHTRAIL_MIN_WOOC_VER', '3.0.0' );
@@ -30,14 +30,10 @@ if ( ! function_exists( 'lightrail_compatibility_tests' ) ) {
 
 if ( ! function_exists( 'lightrail_init_woo_gateway' ) ) {
 
-	/**
-	 * init gateway
-	 */
 	function lightrail_init_woo_gateway() {
 		if ( !lightrail_compatibility_tests() ) {
 			return;
 		}
-		// Include the core classes
 		include_once 'includes/woocommerce-lightrail-constants.php';
 		include_once 'includes/woocommerce-lightrail-configs.php';
 		include_once 'includes/woocommerce-lightrail-core.php';
