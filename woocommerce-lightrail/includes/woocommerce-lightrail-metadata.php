@@ -100,13 +100,28 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 
 		public static function is_order_original_total_set ($order)
 		{
-			return $order->meta_exists (WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY);
+			if ( isset( $order ) ) {
+				return $order->meta_exists( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
+			}
 		}
 
 		public static function set_order_original_total( $order, $value ) {
 			if ( isset( $order ) ) {
 				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, $value, true );
 				$order->save();
+			}
+		}
+
+		public static function set_order_original_status ($order, $value) {
+			if ( isset( $order ) ) {
+				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $value, true );
+				$order->save();
+			}
+		}
+
+		public static function get_order_original_status ($order) {
+			if ( isset( $order ) ) {
+				return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY) ?? '';
 			}
 		}
 

@@ -3,6 +3,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata_Constants' ) ) {
 	class WC_Lightrail_Metadata_Constants {
 		const ORIGINAL_TOTAL_METADATA_KEY = '__lightrail_original_total';
 		const TRANSACTIONS_METADATA_KEY = '__lightrail_payment';
+		const ORIGINAL_STATUS_METADATA_KEY = '__lightrail_original_state';
 
 
 		const TRANSACTION_ID = 'transaction_id';
