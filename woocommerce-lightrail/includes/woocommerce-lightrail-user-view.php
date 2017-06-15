@@ -194,7 +194,7 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 											                for (i = 0; i < cssObj.length; i++) { 
 											                    css_obj_property_name = cssObj.item(i);
 											                    css_obj_property_value = cssObj.getPropertyValue(css_obj_property_name);
-											                    if (css_obj_property_name.includes("float") || css_obj_property_name.includes("align"))
+											                    if (css_obj_property_name.includes("float"))
 																	continue;
 											                    target_elem.style[css_obj_property_name] = css_obj_property_value;
 											                }

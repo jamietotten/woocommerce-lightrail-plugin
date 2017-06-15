@@ -53,7 +53,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 				wc_price( $amount_paid ),
 				$code_rep,
-				self::link_to_card_page_on_lightrail_webapp( $transaction_id, $card_id) ) );
+				self::link_to_card_page_on_lightrail_webapp( $transaction_id, $card_id ) ) );
 			WC_Lightrail_Metadata::add_order_transaction( $order, $payment_transaction_object );
 			$order->save();
 
@@ -66,7 +66,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			$capture_result              = WC_LightrailEngine::capture_pending_transaction( $original_transaction_object, uniqid( 'woo_' ), $lightrail_api_key );
 
 
-			$card_id = $capture_result[WC_Lightrail_API_Constants::TRANSACTION_CARD_ID];
+			$card_id = $capture_result[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ];
 
 			$pending_transaction_object [ WC_Lightrail_Metadata_Constants::TRANSACTION_ORIGINAL_TRANSACTION ] = $original_transaction_object;
 			$pending_transaction_object [ WC_Lightrail_Metadata_Constants::TRANSACTION_RAW_OBJECT ]           = $capture_result;
@@ -75,8 +75,8 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			$order->add_order_note( sprintf( __( 'Finalized payment of %s on gift code ****%s - Transaction ID: %s - Original Pending Transaction ID: %s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 					wc_price( $pending_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE ] ),
 					$original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_CODE_LAST_FOUR ],
-				self::link_to_card_page_on_lightrail_webapp( $capture_result[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id),
-				self::link_to_card_page_on_lightrail_webapp( $original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id))
+					self::link_to_card_page_on_lightrail_webapp( $capture_result[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id ),
+					self::link_to_card_page_on_lightrail_webapp( $original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id ) )
 			);
 
 			return $capture_result;
@@ -86,8 +86,10 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 
 			$lightrail_api_key = self::get_lightrail_api_key();
 
-			$original_transaction_object                                                                      = $pending_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_RAW_OBJECT ];
-			$void_result                                                                                      = WC_LightrailEngine::void_pending_transaction( $original_transaction_object, uniqid( 'woo_' ), $lightrail_api_key );
+			$original_transaction_object = $pending_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_RAW_OBJECT ];
+			$void_result                 = WC_LightrailEngine::void_pending_transaction( $original_transaction_object, uniqid( 'woo_' ), $lightrail_api_key );
+			$card_id                     = $void_result[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ];
+
 			$pending_transaction_object [ WC_Lightrail_Metadata_Constants::TRANSACTION_ORIGINAL_TRANSACTION ] = $original_transaction_object;
 			$pending_transaction_object [ WC_Lightrail_Metadata_Constants::TRANSACTION_RAW_OBJECT ]           = $void_result;
 			$pending_transaction_object [ WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS ]               = WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_VOIDED;
@@ -95,8 +97,9 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			$order->add_order_note( sprintf( __( 'Cancelled payment of %s on gift code ****%s - Transaction ID: %s - Original Pending Transaction ID: %s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 					wc_price( $pending_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE ] ),
 					$original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_CODE_LAST_FOUR ],
-					$void_result[ WC_Lightrail_API_Constants::TRANSACTION_ID ],
-					$original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ] )
+					self::link_to_card_page_on_lightrail_webapp( $void_result[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id ),
+					self::link_to_card_page_on_lightrail_webapp( $original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id )
+				)
 			);
 
 			return $void_result;
@@ -108,9 +111,8 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			$original_transaction_object = $transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_RAW_OBJECT ];
 			$refund_result_object        = WC_LightrailEngine::refund_transaction( $original_transaction_object, uniqid( 'woo_' ), $lightrail_api_key );
 			$refund_value                = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $refund_result_object[ WC_Lightrail_API_Constants::TRANSACTION_VALUE ], get_option( 'woocommerce_currency' ) ); //todo: fix this. currency should come from the transaction object
-
-
-			$refund_object = array(
+			$card_id                     = $refund_result_object[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ];
+			$refund_object               = array(
 				WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD          => WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE                   => 0 - $refund_value,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE                    => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND,
@@ -127,8 +129,9 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			$order->add_order_note( sprintf( __( 'Refunded %s to gift code ****%s - Refund Transaction ID: %s - Original Transaction ID: %s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 					wc_price( $refund_value ),
 					$original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_CODE_LAST_FOUR ],
-					$refund_result_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ],
-					$original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ] )
+					self::link_to_card_page_on_lightrail_webapp( $refund_result_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id ),
+					self::link_to_card_page_on_lightrail_webapp( $original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ], $card_id )
+				)
 			);
 
 			return $refund_result_object;
