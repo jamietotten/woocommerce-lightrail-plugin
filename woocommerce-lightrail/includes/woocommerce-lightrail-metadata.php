@@ -112,9 +112,9 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 			}
 		}
 
-		public static function set_order_original_status ($order, $value) {
+		public static function set_order_original_status ($order, $status) {
 			if ( isset( $order ) ) {
-				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $value, true );
+				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $status, true );
 				$order->save();
 			}
 		}
