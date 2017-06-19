@@ -179,7 +179,8 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 		}
 
 		public static function pay_order_button_html_add_cancel( $buttons_html_code ) {
-			$order_id         = $_GET['order-pay'];
+			//$order_id         = $_GET['order-pay'];
+			$order_id         = get_query_var( 'order-pay', 0 );//$_GET['order-pay'];
 			$order            = wc_get_order( $order_id );
 			$cancellation_uri = $order->get_cancel_order_url_raw();
 
@@ -211,8 +212,9 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 
 			if ( isset( $order ) ) {
 				try {
+					WC_Lightrail_Metadata::set_order_original_status($order, 'cancelled');
 					WC_Lightrail_Transactions::void_all_pending_transactions( $order);
-				} catch ( Thr $exception ) {
+				} catch ( Throwable $exception ) {
 					$order->add_order_note( __( 'Failed at cancelling some pending gift code payments. Please contact the store.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 					$order->save();
 					write_log( 'Failed at voiding pending transactions: ' . $exception->getMessage() );
