@@ -173,7 +173,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 
             } else {
 
-                $error_info = self::get_printable_error_info( __FUNCTION__, func_get_args(), [], $custom_message = sprintf( "The method 'refund_transaction()' was called on a transaction object that was missing either the cardId key ('%s') or the transactionId key ('%s')", $cardId, $original_transaction_id ) );
+                $error_info = self::get_printable_error_info( __FUNCTION__, func_get_args(), [], $custom_message = sprintf( "The method 'handle_pending_transaction()' was called on a transaction object that was missing either the cardId key ('%s') or the transactionId key ('%s')", $cardId, $original_transaction_id ) );
                 write_log( $error_info );
                 throw new Exception ( $error_info );
 
