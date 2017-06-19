@@ -148,7 +148,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 		}
 
 		public static function order_item_add_action_buttons_retry( $order ) {
-			if (WC_Lightrail_Metadata::get_order_number_of_failed_transactions($order) > 0) {
+			if ( WC_Lightrail_Metadata::get_order_number_of_failed_transactions( $order ) > 0 ) {
 				$retry_button_title = __( 'Fix Failed Transctions', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
 				$retry_url          = wp_nonce_url( admin_url( 'admin-ajax.php?action=retry&order_id=' . $order->get_id() ), 'retry_' . $order->get_id() );
 
@@ -194,7 +194,9 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 				: sprintf( __( 'No new failed transactions were fixed.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 
 			if ( WC_Lightrail_Metadata::get_order_number_of_failed_transactions( $order ) === 0 ) {
-				$order->set_status( 'processing', $note = __('Fixed all failed transactions.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE) );
+				$original_status = WC_Lightrail_Metadata::get_order_original_status( $order );
+				$original_status = ( $original_status === '' ) ? 'processing' : $original_status;
+				$order->set_status( $original_status, $note = __( 'Fixed all failed transactions.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 				$order->save();
 				$should_be_reloaded = true;
 			}
