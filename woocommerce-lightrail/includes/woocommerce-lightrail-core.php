@@ -118,7 +118,9 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
                 }
             } else {
                 // Handle WP_Error or non-200 HTTP response
-                $error_info = self::get_printable_error_info( __FUNCTION__, func_get_args(), $response );
+		 $calledByFunction = self::getCallerAndCallerArgs()[0];
+		 $callerFunctionArgs = self::getCallerAndCallerArgs()[1];
+		 $error_info = self::get_printable_error_info( $calledByFunction, $callerFunctionArgs, $response, "Triggered by the method 'handle_api_response()' - remainder of this message pertains to the method that called it: " );
                 write_log( $error_info );
                 throw new Exception( $error_info );
             }
@@ -207,13 +209,20 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
                 }
             }
 
-            $error_info = $error_info . sprintf( " | Triggered by method '%s()' with parameters '%s'",
+            $error_info = $error_info . sprintf( " | From method %s with parameters %s",
                     $method_name,
                     json_encode( $parameters, true )
                 );
 
             return $error_info;
         }
+
+	private static function getCallerAndCallerArgs() {
+		$trace = debug_backtrace();
+		$name = $trace[2]['function'] ?? 'global';
+		$args = $trace[2]['args'] ?? [];
+		return array( $name, $args );
+	}
 
     }
 }
