@@ -179,7 +179,8 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 		}
 
 		public static function pay_order_button_html_add_cancel( $buttons_html_code ) {
-			$order_id         = $_GET['order-pay'];
+			//$order_id         = $_GET['order-pay'];
+			$order_id         = get_query_var( 'order-pay', 0 );//$_GET['order-pay'];
 			$order            = wc_get_order( $order_id );
 			$cancellation_uri = $order->get_cancel_order_url_raw();
 
