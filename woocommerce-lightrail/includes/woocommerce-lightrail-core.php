@@ -24,7 +24,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
         }
 
         //NOTE parameter $amount must be negative
-        public static function post_transaction_by_code( string $code, int $amount, string $currency, string $userSuppliedId, string $api_key, bool $pending = false, array $metadata = [] ) {
+        public static function post_transaction_by_code( string $code, int $amount, string $currency, string $userSuppliedId, string $api_key, array $metadata = [] ) {
             // Optional crash, for testing purposes
             self::please_crash( __FUNCTION__ );
 
@@ -34,7 +34,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
                 WC_Lightrail_API_Constants::TRANSACTION_VALUE => $amount,
                 WC_Lightrail_API_Constants::TRANSACTION_CURRENCY => $currency,
                 WC_Lightrail_API_Constants::TRANSACTION_METADATA => $metadata,
-                WC_Lightrail_API_Constants::TRANSACTION_PENDING => $pending
+                WC_Lightrail_API_Constants::TRANSACTION_PENDING => true,
             );
 
             $response = self::call_lightrail_api_with_headers( sprintf( WC_Lightrail_API_Constants::ENDPOINT_CODE_TRANSACTION, $code ), WC_Lightrail_API_Constants::HTTP_POST, $api_key, $post_transaction_body );
