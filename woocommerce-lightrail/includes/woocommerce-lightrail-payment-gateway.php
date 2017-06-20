@@ -70,9 +70,6 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 			);
 		}
 
-		/**
-		 * This function is provided by Wordpress but can be extended (note initial call to parent)
-		 */
 		public function process_admin_options() {
 			parent::process_admin_options();
 			WC_Lightrail_Admin::lightrail_validate_api_key();
@@ -88,8 +85,8 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 //		}
 
 
-		/**
-		 * Initialise customer-facing checkout fields.
+		/*
+		 *  customer-facing checkout fields.
 		 */
 		public function payment_fields() {
 			if ( $description = $this->get_description() ) {
