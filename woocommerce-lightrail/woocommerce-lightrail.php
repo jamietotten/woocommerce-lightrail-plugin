@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: Woocommerce Lightrail
+Plugin Name: WooCommerce Lightrail
 Plugin URI: http://lightrail.com
 Description: Enables WooCommerce merchants to integrate with the Lightrail ecosystem.
 Version: 0.1
