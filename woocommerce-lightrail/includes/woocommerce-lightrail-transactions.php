@@ -31,7 +31,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				$currency,
 				uniqid( 'woo_' ),
 				$lightrail_api_key,
-				true,
+//				true,
 				self::get_transaction_server_side_metadata_note( $order ) );
 			$transaction_id            = $transaction_result_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ];
 			$card_id                   = $transaction_result_object[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ];
