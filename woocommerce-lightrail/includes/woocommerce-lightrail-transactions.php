@@ -35,14 +35,14 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			}
 
 			$code_principal = $available_credit_object[ WC_Lightrail_API_Constants::CODE_PRINCIPAL ]?? array();
-			$code_state     = $code_principal [ WC_Lightrail_API_Constants::CODE_STATE ];
+			$code_state     = $code_principal [ WC_Lightrail_API_Constants::CODE_STATE ] ?? '';
 			if ( $code_state !== WC_Lightrail_API_Constants::CODE_STATE_ACTIVE ) {
 				throw new Exception( __( 'This gift code is not active.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 			}
 
-			$code_principal_balance = $code_principal [ WC_Lightrail_API_Constants::CODE_CURRENT_VALUE ];
+			$code_principal_balance = $code_principal [ WC_Lightrail_API_Constants::CODE_CURRENT_VALUE ] ?? 0;
 
-			$value_attachments = $available_credit_object [ WC_Lightrail_API_Constants::CODE_ATTACHED ];
+			$value_attachments = $available_credit_object [ WC_Lightrail_API_Constants::CODE_ATTACHED ] ?? array();
 
 			$active_value_attachments = array_filter( $value_attachments, function ( $attachment ) {
 				return $attachment[ WC_Lightrail_API_Constants::CODE_STATE ] === WC_Lightrail_API_Constants::CODE_STATE_ACTIVE;
