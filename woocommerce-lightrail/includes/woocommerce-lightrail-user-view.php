@@ -46,6 +46,11 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			$payment_status_string = self::$LIGHTRAIL_TRANSACTION_STATUS_USER_VIEW[$order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS]];
 
 			$payment_method = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD];
+
+			if ( $payment_method === 'lightrail' ) {
+				$payment_method = 'Gift Code'; //remove lightrail name from customer-facing interface
+			}
+
 			$note_string = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE] ?? '';
 
 			if ( $note_string !== '' ) {
