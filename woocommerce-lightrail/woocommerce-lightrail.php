@@ -1,9 +1,9 @@
 <?php
 
 /*
-Plugin Name: Woocommerce Lightrail
+Plugin Name: WooCommerce Lightrail
 Plugin URI: http://lightrail.com
-Description: Enables WooCommerce merchants to integrate with the Lightrail ecosystem.
+Description: Acquire and retain customers using account credits, gift cards, promotions, and points.
 Version: 0.1
 Author: Lightrail
 Author URI: http://lightrail.com
