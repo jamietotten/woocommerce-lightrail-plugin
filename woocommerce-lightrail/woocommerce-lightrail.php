@@ -27,9 +27,9 @@ define( 'WC_LIGHTRAIL_MIN_WOOC_VER', '3.0.0' );
 if ( ! function_exists( 'lightrail_compatibility_tests' ) ) {
 	function lightrail_compatibility_tests() {
 		return ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) //woocommerce is installed and active
-		       && version_compare( phpversion(), WC_LIGHTRAIL_MIN_PHP_VER, '>=' )
-		       && defined( 'WC_VERSION' )
-		       && version_compare( WC_VERSION, WC_LIGHTRAIL_MIN_WOOC_VER, '>=' );
+			&& version_compare( phpversion(), WC_LIGHTRAIL_MIN_PHP_VER, '>=' )
+			&& defined( 'WC_VERSION' )
+			&& version_compare( WC_VERSION, WC_LIGHTRAIL_MIN_WOOC_VER, '>=' );
 	}
 }
 
@@ -37,7 +37,7 @@ if ( ! function_exists( 'lightrail_compatibility_tests' ) ) {
 if ( ! function_exists( 'lightrail_init_woo_gateway' ) ) {
 
 	function lightrail_init_woo_gateway() {
-		if ( !lightrail_compatibility_tests() ) {
+		if ( ! lightrail_compatibility_tests() ) {
 			return;
 		}
 		include_once 'includes/woocommerce-lightrail-constants.php';

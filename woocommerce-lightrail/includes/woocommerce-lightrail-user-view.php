@@ -8,7 +8,7 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 		private static $LIGHTRAIL_TRANSACTION_STATUS_USER_VIEW = NULL;
 
 		public static function init() {
-			if (self::$LIGHTRAIL_TRANSACTION_STATUS_USER_VIEW == NULL) {
+			if ( self::$LIGHTRAIL_TRANSACTION_STATUS_USER_VIEW == NULL ) {
 				self::$LIGHTRAIL_TRANSACTION_STATUS_USER_VIEW = array(
 					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING            => __( '[Pending]', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_CAPTURED           => '',
@@ -42,27 +42,27 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 
 		private static function get_row_for_transaction_object( $order_transaction_object ) {
 
-			$payment_amount        = $order_transaction_object [WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE];
-			$payment_status_string = self::$LIGHTRAIL_TRANSACTION_STATUS_USER_VIEW[ $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS] ];
+			$payment_amount = $order_transaction_object [WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE];
+			$payment_status_string = self::$LIGHTRAIL_TRANSACTION_STATUS_USER_VIEW[$order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS]];
 
 			$payment_method = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD];
-			$note_string    = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE] ?? '';
+			$note_string = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE] ?? '';
 
 			if ( $note_string !== '' ) {
 				$note_string = ' (' . $note_string . ')';
 			}
-			$transaction_type_string = ($order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT)
+			$transaction_type_string = ( $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? __( 'Payment', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
 				: __( 'Refund', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-			$line_item_label         = sprintf( "%s %s %s%s",
-				$payment_status_string ,
+			$line_item_label = sprintf( "%s %s %s%s",
+				$payment_status_string,
 				$payment_method,
 				$transaction_type_string,
 				$note_string );
 
 			return array(
 				'label' => $line_item_label,
-				'value' => wc_price( 0 - $payment_amount )
+				'value' => wc_price( 0 - $payment_amount ),
 			);
 		}
 
@@ -74,40 +74,40 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			if ( isset( $order ) ) {
 				$order_payments_array = WC_Lightrail_Metadata::get_order_transactions_in_which( $order,
 					array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) );
-				$order_refunds_array  = WC_Lightrail_Metadata::get_order_transactions_in_which( $order,
-					array(WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
+				$order_refunds_array = WC_Lightrail_Metadata::get_order_transactions_in_which( $order,
+					array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
 
 
 				$row_counter = 0;
 				foreach ( $order_payments_array as $order_transaction_object ) { //first all the payments
-					$total_rows[ 'partial_payment_' . $row_counter ++ ] = self::get_row_for_transaction_object( $order_transaction_object );
+					$total_rows['partial_payment_' . $row_counter++] = self::get_row_for_transaction_object( $order_transaction_object );
 				}
 				if ( count( $order_payments_array ) != 0 ) {
 					$total_rows['total_paid'] = array(
 						'label' => __( 'Payments Total:', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-						'value' => wc_price( 0 - WC_Lightrail_Metadata::get_order_payments_total( $order ) )
+						'value' => wc_price( 0 - WC_Lightrail_Metadata::get_order_payments_total( $order ) ),
 					);
 				}
 				$row_counter = 0; //reset to start counting refund rows now.
 				foreach ( $order_refunds_array as $order_transaction_object ) { //now all the refunds
-					$total_rows[ 'partial_refund_' . $row_counter ++ ] = self::get_row_for_transaction_object( $order_transaction_object );
+					$total_rows['partial_refund_' . $row_counter++] = self::get_row_for_transaction_object( $order_transaction_object );
 				}
 				if ( count( $order_refunds_array ) != 0 ) {
 					$total_rows['total_refunded'] = array(
 						'label' => __( 'Refunds Total:', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-						'value' => wc_price( 0 - WC_Lightrail_Metadata::get_order_refunds_total( $order ) )
+						'value' => wc_price( 0 - WC_Lightrail_Metadata::get_order_refunds_total( $order ) ),
 					);
 					//if we are handling refunds, remove the less informative built-in refund rows.
 					foreach ( array_keys( $total_rows ) as $total_row_key ) {
 						if ( substr( $total_row_key, 0, 7 ) === "refund_" ) {
-							unset( $total_rows[ $total_row_key ] );
+							unset( $total_rows[$total_row_key] );
 						}
 					}
 				}
 				if ( count( $order_payments_array ) != 0 || count( $order_refunds_array ) != 0 ) {
 					$total_rows['balance'] = array(
 						'label' => __( 'Balance:', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-						'value' => '<strong>' . wc_price( WC_Lightrail_Metadata::get_order_balance( $order ) ) . '</strong>'
+						'value' => '<strong>' . wc_price( WC_Lightrail_Metadata::get_order_balance( $order ) ) . '</strong>',
 					);
 				}
 			}
@@ -171,21 +171,21 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 
 		public static function order_button_html_add_cancel( $buttons_html_code ) {
 			$cancel_hidden_input_element = '<input type="hidden" id="lr_wc_canceled_order" name="lightrail_woocommerce_order_cancelled" value="false">';
-			$cancel_button_element       = '<input type="submit" class="button alt" name="lightrail_woocommerce_order_cancelled_btn" id="lightrail_woocommerce_checkout_cancel_order_btn" value="Cancel Order"  
+			$cancel_button_element = '<input type="submit" class="button alt" name="lightrail_woocommerce_order_cancelled_btn" id="lightrail_woocommerce_checkout_cancel_order_btn" value="Cancel Order"  
 					onclick="document.getElementById(\'lr_wc_canceled_order\').setAttribute(\'value\', \'true\');">';
-			$buttons_html_code           = $cancel_hidden_input_element . $cancel_button_element . $buttons_html_code;
+			$buttons_html_code = $cancel_hidden_input_element . $cancel_button_element . $buttons_html_code;
 
 			return $buttons_html_code;
 		}
 
 		public static function pay_order_button_html_add_cancel( $buttons_html_code ) {
 			//$order_id         = $_GET['order-pay'];
-			$order_id         = get_query_var( 'order-pay', 0 );//$_GET['order-pay'];
-			$order            = wc_get_order( $order_id );
+			$order_id = get_query_var( 'order-pay', 0 );//$_GET['order-pay'];
+			$order = wc_get_order( $order_id );
 			$cancellation_uri = $order->get_cancel_order_url_raw();
 
 
-			$cancel_button_element             = '<a class="button alt" name="lightrail_woocommerce_order_cancelled_btn" href="' . $cancellation_uri . '" id="lightrail_woocommerce_checkout_cancel_order_btn">Cancel Order</a>';
+			$cancel_button_element = '<a class="button alt" name="lightrail_woocommerce_order_cancelled_btn" href="' . $cancellation_uri . '" id="lightrail_woocommerce_checkout_cancel_order_btn">Cancel Order</a>';
 			$cancel_button_adjust_style_script = '<script>
 														adjustStyle();
 														function adjustStyle() {
@@ -212,8 +212,8 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 
 			if ( isset( $order ) ) {
 				try {
-					WC_Lightrail_Metadata::set_order_original_status($order, 'cancelled');
-					WC_Lightrail_Transactions::void_all_pending_transactions( $order);
+					WC_Lightrail_Metadata::set_order_original_status( $order, 'cancelled' );
+					WC_Lightrail_Transactions::void_all_pending_transactions( $order );
 				} catch ( Throwable $exception ) {
 					$order->add_order_note( __( 'Failed at cancelling some pending gift code payments. Please contact the store.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 					$order->save();
@@ -226,9 +226,9 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			}
 		}
 
-		public static function order_needs_payment_not_if_already_pending ( $needs_payment_already, $order, $valid_order_statuses_for_payment ) {
-			$lightrail_pending_paid = ($order->get_status() ==='failed') && count(WC_Lightrail_Metadata::get_order_transactions($order)) > 0;
-			return $needs_payment_already && !$lightrail_pending_paid;
+		public static function order_needs_payment_not_if_already_pending( $needs_payment_already, $order, $valid_order_statuses_for_payment ) {
+			$lightrail_pending_paid = ( $order->get_status() === 'failed' ) && count( WC_Lightrail_Metadata::get_order_transactions( $order ) ) > 0;
+			return $needs_payment_already && ! $lightrail_pending_paid;
 		}
 
 	}

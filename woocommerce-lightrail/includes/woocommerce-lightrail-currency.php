@@ -29,16 +29,16 @@ if ( ! class_exists( 'WC_Lightrail_Currency' ) ) {
 			}
 		}
 
-		public static function lightrail_currency_major_to_minor($value, string $currency ) {
-			$major_to_minor_factor = self::$currency_major_to_minor_factor[ strtoupper( $currency ) ] ?? 100;
-			$minor_value           = round( $value, 2 ) * $major_to_minor_factor;
+		public static function lightrail_currency_major_to_minor( $value, string $currency ) {
+			$major_to_minor_factor = self::$currency_major_to_minor_factor[strtoupper( $currency )] ?? 100;
+			$minor_value = round( $value, 2 ) * $major_to_minor_factor;
 
 			return $minor_value;
 		}
 
-		public static function lightrail_currency_minor_to_major($value, string $currency ) {
-			$major_to_minor_factor = self::$currency_major_to_minor_factor[ strtoupper( $currency ) ] ?? 100;
-			$major_value           = round( $value / $major_to_minor_factor, 2 );
+		public static function lightrail_currency_minor_to_major( $value, string $currency ) {
+			$major_to_minor_factor = self::$currency_major_to_minor_factor[strtoupper( $currency )] ?? 100;
+			$major_value = round( $value / $major_to_minor_factor, 2 );
 
 			return $major_value;
 		}

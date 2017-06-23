@@ -12,14 +12,14 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 
 			$this->init_form_fields();
 
-			$this->title       = $this->get_option( 'title' );
+			$this->title = $this->get_option( 'title' );
 			$this->description = $this->get_option( 'description' );
 			//$this->instructions = $this->get_option( 'instructions' );
 
 			//add_action( 'woocommerce_thankyou', array( $this, 'thankyou_page' ) );
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 				$this,
-				'process_admin_options'
+				'process_admin_options',
 			) );
 		}
 
@@ -123,7 +123,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 				$code = $_POST['lightrail_gift_code'];
 				$order_currency = get_option( 'woocommerce_currency' );
 
-				$available_credit = WC_Lightrail_Transactions::get_gift_code_balance($code, $order_currency);
+				$available_credit = WC_Lightrail_Transactions::get_gift_code_balance( $code, $order_currency );
 
 //				$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $this->get_option( 'api_key' ) );
 //
@@ -181,12 +181,12 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 
 					return array(
 						'result'   => 'success',
-						'redirect' => $order->get_checkout_payment_url()
+						'redirect' => $order->get_checkout_payment_url(),
 					);
 				}
 
 			} catch ( Throwable $e ) {
-				wc_add_notice( sprintf(__('Error: %s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $e->getMessage()), 'error' );
+				wc_add_notice( sprintf( __( 'Error: %s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $e->getMessage() ), 'error' );
 				write_log( $e->getMessage() );
 
 				return; //stay on the page
