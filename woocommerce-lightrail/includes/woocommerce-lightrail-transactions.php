@@ -23,6 +23,46 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			return sprintf( '<a href="%s">%s</a>', $link, $display_text );
 		}
 
+		public static function get_gift_code_balance( $code, $order_currency ) {
+			$lightrail_api_key       = self::get_lightrail_api_key();
+			$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $lightrail_api_key );
+			$code_currency           = $available_credit_object[ WC_Lightrail_API_Constants::CODE_CURRENCY ];
+			if ( $order_currency !== $code_currency ) {
+				throw new Exception( sprintf(
+					__( 'Currency mismatch. Attempting to pay %s value with %s.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
+					$order_currency,
+					$code_currency ) );
+			}
+
+			$code_principal = $available_credit_object[ WC_Lightrail_API_Constants::CODE_PRINCIPAL ]?? array();
+			$code_state     = $code_principal [ WC_Lightrail_API_Constants::CODE_STATE ] ?? '';
+			if ( $code_state !== WC_Lightrail_API_Constants::CODE_STATE_ACTIVE ) {
+				throw new Exception( __( 'This gift code is not active.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
+			}
+
+			$code_principal_balance = $code_principal [ WC_Lightrail_API_Constants::CODE_CURRENT_VALUE ] ?? 0;
+
+			$value_attachments = $available_credit_object [ WC_Lightrail_API_Constants::CODE_ATTACHED ] ?? array();
+
+			$active_value_attachments = array_filter( $value_attachments, function ( $attachment ) {
+				return $attachment[ WC_Lightrail_API_Constants::CODE_STATE ] === WC_Lightrail_API_Constants::CODE_STATE_ACTIVE;
+			} );
+			$code_available_balance   = array_reduce( $active_value_attachments,
+				function ( $carry, $attachment ) {
+					return $carry + $attachment[ WC_Lightrail_API_Constants::CODE_CURRENT_VALUE ];
+				},
+				$code_principal_balance );
+
+			$code_available_balance = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_available_balance, $code_currency );
+			if ( $code_available_balance == 0 ) {
+				throw new Exception( sprintf(
+					__( 'The gift code does not have any value available.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
+				) );
+			}
+
+			return $code_available_balance ;
+		}
+
 		public static function post_pending_payment_transaction_by_code( $order, $code, $amount, $currency ) {
 			$lightrail_api_key         = self::get_lightrail_api_key();
 			$transaction_result_object = WC_LightrailEngine::post_transaction_by_code(
