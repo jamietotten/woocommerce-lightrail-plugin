@@ -121,26 +121,28 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 
 				//the gift code is passed on as a post request param
 				$code = $_POST['lightrail_gift_code'];
-
-				$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $this->get_option( 'api_key' ) );
-
-				$code_currency  = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENCY ];
 				$order_currency = get_option( 'woocommerce_currency' );
-				if ( $code_currency !== $order_currency ) {
-					$error_msg = sprintf( __( 'Currency mismatch. Attempting to pay %s value with %s.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-						$order_currency, $code_currency );
-					throw new Exception( $error_msg );
-				}
 
-				$code_current_value = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENT_VALUE ];
-				$available_credit   = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_current_value, $order_currency );
-				if ( ! ( $available_credit > 0 ) ) {
-					$error_msg = __( 'Insufficient value on the gift code.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-					write_log( 'Insufficient value on gift code. ' . $available_credit );
-					wc_add_notice( $error_msg, 'error' );
+				$available_credit = WC_Lightrail_Transactions::get_gift_code_balance($code, $order_currency);
 
-					return;
-				}
+//				$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $this->get_option( 'api_key' ) );
+//
+//				$code_currency  = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENCY ];
+//				if ( $code_currency !== $order_currency ) {
+//					$error_msg = sprintf( __( 'Currency mismatch. Attempting to pay %s value with %s.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
+//						$order_currency, $code_currency );
+//					throw new Exception( $error_msg );
+//				}
+//
+//				$code_current_value = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENT_VALUE ];
+//				$available_credit   = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_current_value, $order_currency );
+//				if ( ! ( $available_credit > 0 ) ) {
+//					$error_msg = __( 'Insufficient value on the gift code.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
+//					write_log( 'Insufficient value on gift code. ' . $available_credit );
+//					wc_add_notice( $error_msg, 'error' );
+//
+//					return;
+//				}
 
 				//if there is not enough credit we will pay what we can with the code and go back to the payment page for paying the remainder
 				$amount_to_charge = ( $available_credit < $total ) ? $available_credit : $total;
@@ -184,7 +186,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 				}
 
 			} catch ( Throwable $e ) {
-				wc_add_notice( __( 'Error occurred in processing this payment. Please try again or choose another payment method.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), 'error' );
+				wc_add_notice( sprintf(__('Error: %s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $e->getMessage()), 'error' );
 				write_log( $e->getMessage() );
 
 				return; //stay on the page

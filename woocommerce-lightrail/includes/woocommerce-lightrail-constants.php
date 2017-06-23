@@ -52,16 +52,23 @@ if (!class_exists('WC_Lightrail_API_Constants')) {
             const TRANSACTION_ID = 'transactionId';
             const TRANSACTION_CURRENCY = 'currency';
             const TRANSACTION_VALUE = 'value';
-            const TRANSACTION_CURRENT_VALUE = 'currentValue';
             const TRANSACTION_METADATA = 'metadata';
             const TRANSACTION_PENDING = 'pending';
             const TRANSACTION_PENDING_CAPTURE = 'capture';
             const TRANSACTION_PENDING_VOID = 'void';
             const TRANSACTION_CODE_LAST_FOUR='codeLastFour';
 
+			const CODE_CURRENCY='currency';
+			const CODE_PRINCIPAL='principal';
+	        const CODE_ATTACHED='attached';
 
-            const ENDPOINT_PING= '/ping';
-            const ENDPOINT_BALANCE = '/codes/%s/balance';
+	        const CODE_CURRENT_VALUE = 'currentValue';
+	        const CODE_STATE = 'state';
+	        const CODE_STATE_ACTIVE='ACTIVE';
+
+
+	        const ENDPOINT_PING= '/ping';
+            const ENDPOINT_BALANCE = '/codes/%s/balance/details';
             const ENDPOINT_CODE_TRANSACTION = '/codes/%s/transactions';
             const ENDPOINT_REFUND = '/cards/%s/transactions/%s/refund';
             const ENDPOINT_HANDLE_PENDING = '/cards/%s/transactions/%s/%s';
