@@ -61,5 +61,5 @@ To avoid confusion on the checkout page, if you are using Lightrail gift codes, 
 
 ## Changelog
 
-= 1.0.0 =
+= 1.0.0-alpha =
 * Initial Release

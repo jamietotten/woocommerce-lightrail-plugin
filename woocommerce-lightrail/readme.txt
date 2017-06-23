@@ -49,5 +49,5 @@ By default, when WooCommerce is activated it enables the use of WooCommerce-powe
 
 == Changelog ==
 
-= 0.1.0 =
+= 1.0.0-alpha=
 * Initial Release
