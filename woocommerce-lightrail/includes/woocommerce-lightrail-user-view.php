@@ -23,7 +23,7 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			add_filter( 'woocommerce_get_formatted_order_total', 'WC_Lightrail_User::get_formatted_order_total_add_partial_payments_and_refunds', 10, 2 );
 			add_filter( 'woocommerce_get_order_item_totals', 'WC_Lightrail_User::get_order_item_totals_add_partial_payments_and_refunds', 10, 3 );
 			add_action( 'woocommerce_payment_complete', 'WC_Lightrail_User::payment_complete_add_last_payment_info_and_capture_all_pending', 10, 1 );
-			add_action( 'woocommerce_checkout_order_processed', 'WC_Lightrail_User::checkout_order_processed_handle_cancellation', 10, 3 );
+			//add_action( 'woocommerce_checkout_order_processed', 'WC_Lightrail_User::checkout_order_processed_handle_cancellation', 10, 3 );
 			//add_filter( 'woocommerce_order_button_html', 'WC_Lightrail_User::order_button_html_add_cancel', 10, 1 );
 			add_filter( 'woocommerce_pay_order_button_html', 'WC_Lightrail_User::pay_order_button_html_add_cancel', 10, 1 );
 			add_action( 'woocommerce_order_status_cancelled', 'WC_Lightrail_User::order_status_cancelled_rollback_partial_payments', 10, 1 );
@@ -120,6 +120,8 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			return $total_rows;
 		}
 
+
+
 		/**
 		 * When the last payment is made using a payment method other than lightrail, add this last payment to the metadata
 		 * and adjust the payment method of the whole order to be lightrail so that we receive and handle its refund requests if it happens.
@@ -127,11 +129,12 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 		public static function payment_complete_add_last_payment_info_and_capture_all_pending( $order_id ) {
 			$order = wc_get_order( $order_id );
 
+			write_log('payment_complete_add_last_payment_info_and_capture_all_pending was called for order_id '.$order_id);
+
 			if ( isset ( $order ) ) {
 				if ( $order->get_payment_method() !== WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME ) {
 					//first we post the last transaction by the third-party gateway
 					$transaction_amount = $order->get_total(); //because our payment gateway sets the order->total to be the remaining balance and this was the last payment.
-
 					WC_Lightrail_Transactions::post_third_party_captured_transaction( $order, $order->get_payment_method(), $transaction_amount, $order->get_transaction_id() );
 
 					//now we have to capture all lightrail pending transactions on the order
