@@ -89,13 +89,18 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 			$order_transactions_array = array_filter( self::get_order_transactions_in_which( $order,
 				array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
+
 			return array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 );
 		}
 
 
 		public static function get_order_original_total( $order ) {
 			if ( isset( $order ) ) {
-				return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
+				if ( $order->meta_exists( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY ) ) {
+					return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
+				} else {
+					return $order->get_total();
+				}
 			}
 		}
 
