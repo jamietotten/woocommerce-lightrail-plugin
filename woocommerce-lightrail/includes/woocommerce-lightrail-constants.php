@@ -16,8 +16,6 @@ if ( ! class_exists( 'WC_Lightrail_Metadata_Constants' ) ) {
 		const TRANSACTION_ORIGINAL_TRANSACTION_ID = 'original_transaction_id';
 		const TRANSACTION_ORIGINAL_TRANSACTION = 'original_transaction';
 
-		//const TRANSACTION_PAYMENT_METHOD_LIGHTRAIL = 'lightrail';
-
 
 		const TRANSACTION_STATUS_PENDING = 'PENDING';
 		const TRANSACTION_STATUS_VOIDED = 'VOIDED';

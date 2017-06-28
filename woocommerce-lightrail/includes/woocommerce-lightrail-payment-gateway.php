@@ -5,18 +5,13 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 
 		public function __construct() {
 			$this->id = WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME;
-			//$this->icon               = plugins_url( 'img/lightrail.png', __FILE__ );
 			$this->has_fields = true;
-			//$this->method_title       = __( 'Lightrail', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-			//$this->method_description = __( 'Pay using a Lightrail gift code.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
 
 			$this->init_form_fields();
 
 			$this->title = $this->get_option( 'title' );
 			$this->description = $this->get_option( 'description' );
-			//$this->instructions = $this->get_option( 'instructions' );
 
-			//add_action( 'woocommerce_thankyou', array( $this, 'thankyou_page' ) );
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 				$this,
 				'process_admin_options',
@@ -46,13 +41,6 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 					'default'     => __( 'Pay using a gift code.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 					'desc_tip'    => true,
 				),
-//				'instructions'    => array(
-//					'title'       => __( 'Instructions', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-//					'type'        => 'textarea',
-//					'description' => __( 'Instructions that will be added to the thank you page and emails.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-//					'default'     => '',
-//					'desc_tip'    => true,
-//				),
 
 				// API CREDENTIALS
 				'api_credentials' => array(
@@ -74,15 +62,6 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 			parent::process_admin_options();
 			WC_Lightrail_Admin::lightrail_validate_api_key();
 		}
-
-//		/**
-//		 * Output for the order received page.
-//		 */
-//		public function thankyou_page() {
-//			if ( $this->instructions ) {
-//				echo wpautop( wptexturize( $this->instructions ) );
-//			}
-//		}
 
 
 		/*
@@ -124,25 +103,6 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 				$order_currency = get_option( 'woocommerce_currency' );
 
 				$available_credit = WC_Lightrail_Transactions::get_gift_code_balance( $code, $order_currency );
-
-//				$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $this->get_option( 'api_key' ) );
-//
-//				$code_currency  = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENCY ];
-//				if ( $code_currency !== $order_currency ) {
-//					$error_msg = sprintf( __( 'Currency mismatch. Attempting to pay %s value with %s.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-//						$order_currency, $code_currency );
-//					throw new Exception( $error_msg );
-//				}
-//
-//				$code_current_value = $available_credit_object[ WC_Lightrail_API_Constants::TRANSACTION_CURRENT_VALUE ];
-//				$available_credit   = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_current_value, $order_currency );
-//				if ( ! ( $available_credit > 0 ) ) {
-//					$error_msg = __( 'Insufficient value on the gift code.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-//					write_log( 'Insufficient value on gift code. ' . $available_credit );
-//					wc_add_notice( $error_msg, 'error' );
-//
-//					return;
-//				}
 
 				//if there is not enough credit we will pay what we can with the code and go back to the payment page for paying the remainder
 				$amount_to_charge = ( $available_credit < $total ) ? $available_credit : $total;
@@ -193,9 +153,5 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 			}
 		}
 
-//		enable when partial refund is supported
-//		public function process_refund( $order_id, $amount = null, $reason = '' ) {
-//			//we don't support automatic partial refunds
-//		}
 	}
 }

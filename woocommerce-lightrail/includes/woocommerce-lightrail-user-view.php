@@ -23,8 +23,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			add_filter( 'woocommerce_get_formatted_order_total', 'WC_Lightrail_User::get_formatted_order_total_add_partial_payments_and_refunds', 10, 2 );
 			add_filter( 'woocommerce_get_order_item_totals', 'WC_Lightrail_User::get_order_item_totals_add_partial_payments_and_refunds', 10, 3 );
 			add_action( 'woocommerce_payment_complete', 'WC_Lightrail_User::payment_complete_add_last_payment_info_and_capture_all_pending', 10, 1 );
-			//add_action( 'woocommerce_checkout_order_processed', 'WC_Lightrail_User::checkout_order_processed_handle_cancellation', 10, 3 );
-			//add_filter( 'woocommerce_order_button_html', 'WC_Lightrail_User::order_button_html_add_cancel', 10, 1 );
 			add_filter( 'woocommerce_pay_order_button_html', 'WC_Lightrail_User::pay_order_button_html_add_cancel', 10, 1 );
 			add_action( 'woocommerce_order_status_cancelled', 'WC_Lightrail_User::order_status_cancelled_rollback_partial_payments', 10, 1 );
 			add_filter( 'woocommerce_order_needs_payment', 'WC_Lightrail_User::order_needs_payment_not_if_already_pending', 10, 3 );
@@ -154,42 +152,9 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 
 		}
 
-//		/**
-//		 * this function is injected to the order processing page to make sure to terminate order processing if the order was cancelled
-//		 */
-//		public static function checkout_order_processed_handle_cancellation( $order_id, $posted_data, $order ) {
-//
-//			$canceled = $_POST['lightrail_woocommerce_order_cancelled'] === 'true';
-//
-//			if ( $canceled ) {
-//				$redirect_uri = $order->get_cancel_order_url_raw();
-//				if ( is_ajax() ) {
-//					write_log( "redirect_arg: " . $redirect_uri );
-//					$result = array(
-//						'result'   => 'success',
-//						'messages' => '',
-//						'redirect' => $redirect_uri,
-//					);
-//					wp_send_json( $result );
-//				} else {
-//					wp_redirect( $redirect_uri );
-//					exit;
-//				}
-//			}
-//		}
-//
-//		public static function order_button_html_add_cancel( $buttons_html_code ) {
-//			$cancel_hidden_input_element = '<input type="hidden" id="lr_wc_canceled_order" name="lightrail_woocommerce_order_cancelled" value="false">';
-//			$cancel_button_element = '<input type="submit" class="button alt" name="lightrail_woocommerce_order_cancelled_btn" id="lightrail_woocommerce_checkout_cancel_order_btn" value="Cancel Order"
-//					onclick="document.getElementById(\'lr_wc_canceled_order\').setAttribute(\'value\', \'true\');">';
-//			$buttons_html_code = $cancel_hidden_input_element . $cancel_button_element . $buttons_html_code;
-//
-//			return $buttons_html_code;
-//		}
 
 		public static function pay_order_button_html_add_cancel( $buttons_html_code ) {
-			//$order_id         = $_GET['order-pay'];
-			$order_id = get_query_var( 'order-pay', 0 );//$_GET['order-pay'];
+			$order_id = get_query_var( 'order-pay', 0 );
 			$order = wc_get_order( $order_id );
 			$cancellation_uri = $order->get_cancel_order_url_raw();
 

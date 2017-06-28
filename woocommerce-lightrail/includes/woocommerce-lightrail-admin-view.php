@@ -158,7 +158,6 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 		}
 
 		public static function retry_action() {
-			//write_log( "lightrail_retry_action was called." );
 			$order_id = $_POST['order_id'];
 
 			check_admin_referer( 'retry_' . $order_id );

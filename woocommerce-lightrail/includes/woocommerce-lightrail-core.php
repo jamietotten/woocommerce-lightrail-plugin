@@ -43,27 +43,6 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 
 		}
 
-//		public static function post_transaction_by_cardid( string $cardId, int $amount, string $currency, string $userSuppliedId, string $api_key, array $metadata = [], bool $pending = false ) {
-//			// Optional crash, for testing purposes
-//            self::please_crash( __FUNCTION__ );
-//
-//			//Business as usual
-//			// NOTE this will need to be updated if using pending transactions
-//
-//			$post_transaction_by_cardid_body = array(
-//				WC_Lightrail_API_Constants::TRANSACTION_USER_SUPPLIED_ID => $userSuppliedId,
-//				WC_Lightrail_API_Constants::TRANSACTION_VALUE          => $amount,
-//				WC_Lightrail_API_Constants::TRANSACTION_CURRENCY       => $currency,
-//				WC_Lightrail_API_Constants::TRANSACTION_METADATA       => $metadata,
-//				WC_Lightrail_API_Constants::TRANSACTION_PENDING        => $pending
-//			);
-//
-//			$response = self::call_lightrail_api_with_headers( sprintf( '/cards/%s/code/transactions', $cardId ), 'post', $api_key, $post_transaction_by_cardid_body );
-//
-//			return self::handle_api_response( $response, 'transaction' );
-//
-//		}
-
 		public static function refund_transaction( array $original_transaction_object_returned_from_post_method, string $userSuppliedId, string $api_key ) {
 			// Optional crash, for testing purposes
 			self::please_crash( __FUNCTION__ );
