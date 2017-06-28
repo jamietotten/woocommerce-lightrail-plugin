@@ -7,7 +7,7 @@ if ( ! class_exists( 'WC_Lightrail_Currency' ) ) {
 		private static $currency_major_to_minor_factor = null;
 
 		public static function init() {
-			if ( self::$currency_major_to_minor_factor == null ) {
+			if ( null == self::$currency_major_to_minor_factor ) {
 				//zero decimal currencies
 				$currency_table ['BIF'] =
 				$currency_table ['CLP'] =

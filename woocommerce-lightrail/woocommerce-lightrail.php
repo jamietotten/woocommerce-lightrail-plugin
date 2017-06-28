@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: WooCommerce Lightrail
+Plugin Name: Lightrail for WooCommerce
 Plugin URI: http://lightrail.com
 Description: Acquire and retain customers using account credits, gift cards, promotions, and points.
 Version: 1.0.0-alpha
@@ -9,11 +9,11 @@ Author: Lightrail
 Author URI: http://lightrail.com
 License: GPL2
 
-Woocommerce Lightrail is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or any later version.
+Lightrail for WooCommerce is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or any later version.
 
-Woocommerce Lightrail is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+Lightrail for WooCommerce is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with Woocommerce Lightrail. If not, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
+You should have received a copy of the GNU General Public License along with Lightrail for WooCommerce. If not, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
 */
 
 

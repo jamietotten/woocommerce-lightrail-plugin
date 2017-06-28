@@ -1,4 +1,4 @@
-# WooCommerce Lightrail Integration
+# Lightrail for WooCommerce
 
 A Wordpress plugin which enables WooCommerce merchants to integrate with the Lightrail ecosystem.
 
@@ -51,7 +51,7 @@ In order for this plugin to work, the WooComerce wordpress plugin must be instal
 In order to connect with the Lightrail API, the plugin needs valid Lightrail API keys. 
 
 1. Find your API key in your  [Lightrail dashboard](https://www.lightrail.com/app/#/login): Go to `Account Settings`, click your user badge in the top right corner, and then click on `API`.
-2. Enter your API key into the WooCommerce Lightrail settings page: from the WordPress dashboard go to `WooCommerce` > `Settings` > `Checkout` tab. Scroll down to the bottom of the page under `Payment Gateways ` and click on `Gift Code` by Lightrail. Paster the API Key in the text area.
+2. Enter your API key into the Lightrail for WooCommerce settings page: from the WordPress dashboard go to `WooCommerce` > `Settings` > `Checkout` tab. Scroll down to the bottom of the page under `Payment Gateways ` and click on `Gift Code` by Lightrail. Paste the API Key in the text area.
 
 ### WooCommerce Coupons
 
