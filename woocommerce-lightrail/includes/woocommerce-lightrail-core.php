@@ -107,7 +107,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 		}
 
 		private static function call_lightrail_api_with_headers( string $endpoint, string $method, string $api_key, array $body = [] ) {
-			if ( $method == 'GET' ) {
+			if ( WC_Lightrail_API_Constants::HTTP_GET === $method ) {
 				return wp_safe_remote_get( WC_Lightrail_API_Configs::API_BASE_URL . $endpoint,
 					array(
 						WC_Lightrail_API_Constants::HTTP_HEADERS => self::build_headers( $api_key ),
@@ -115,11 +115,11 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				);
 			}
 
-			if ( $method == 'POST' ) {
+			if ( WC_Lightrail_API_Constants::HTTP_POST === $method ) {
 				return wp_safe_remote_post( WC_Lightrail_API_Configs::API_BASE_URL . $endpoint,
 					array(
 						WC_Lightrail_API_Constants::HTTP_HEADERS => self::build_headers( $api_key ),
-						'body'                                   => json_encode( $body, JSON_FORCE_OBJECT ),
+						WC_Lightrail_API_Constants::HTTP_BODY    => json_encode( $body, JSON_FORCE_OBJECT ),
 					)
 				);
 			}

@@ -41,6 +41,7 @@ if ( ! class_exists( 'WC_Lightrail_Plugin_Constants' ) ) {
 if ( ! class_exists( 'WC_Lightrail_API_Constants' ) ) {
 	class WC_Lightrail_API_Constants {
 		const HTTP_HEADERS = 'headers';
+		const HTTP_BODY = 'body';
 
 		const HTTP_GET = 'GET';
 		const HTTP_POST = 'POST';

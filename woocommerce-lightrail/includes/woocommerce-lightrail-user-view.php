@@ -102,7 +102,7 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 					);
 					//if we are handling refunds, remove the less informative built-in refund rows.
 					foreach ( array_keys( $total_rows ) as $total_row_key ) {
-						if ( substr( $total_row_key, 0, 7 ) === "refund_" ) {
+						if ( substr( $total_row_key, 0, 7 ) === 'refund_' ) {
 							unset( $total_rows[$total_row_key] );
 						}
 					}
