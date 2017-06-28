@@ -1,4 +1,4 @@
-=== WooCommerce Lightrail ===
+=== Lightrail for WooCommerce ===
 Contributors: lightrailintegrations
 Tags: woocommerce, giftcard
 Requires at least: 4.7
@@ -26,20 +26,20 @@ Requirements: Wordpress 4.7, WooCommerce 3.0, PHP7
 
 1. Go to **Plugins > Add new > Upload Plugin**
 2. Click **Choose File**, select the .zip file of the plugin, click **Install Now** and then **Activate Plugin** when prompted
-3. Add your Lightrail API key on the WooCommerce Lightrail settings page (details below)
+3. Add your Lightrail API key on the Lightrail for WooCommerce settings page (details below)
 
 **By FTP / SFTP / etc**
 
 1. Upload the entire 'woocommerce-lightrail' folder to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Add your Lightrail API key on the WooCommerce Lightrail settings page (details below)
+3. Add your Lightrail API key on the Lightrail for WooCommerce settings page (details below)
 
 = Add your Lightrail API key =
 
 You'll need to enter your Lightrail API key to connect with your Lightrail account and process gift cards.
 
 1. Get your Lightrail API key: go to your **[Lightrail dashboard](https://www.lightrail.com/app/#/login) > Account settings (click your user badge in the top right corner) > API** and copy the
-2. Paste it into the WooCommerce Lightrail settings page: from the WordPress dashboard go to **WooCommerce > Settings > Checkout tab > Lightrail**
+2. Paste it into the Lightrail for WooCommerce settings page: from the WordPress dashboard go to **WooCommerce > Settings > Checkout tab > Lightrail**
 
 = A note on 'coupons' and user-friendliness =
 
