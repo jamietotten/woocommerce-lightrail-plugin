@@ -46,7 +46,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 			$transaction_type_string = ( $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND )
 				? ' Refund via ' : ' ';
 			$notes_string = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE] ?? '';
-			$notes_string = ( $notes_string !== '' ) ? ' (' . $notes_string . ')' : '';
+			$notes_string = ( '' !== $notes_string ) ? ' (' . $notes_string . ')' : '';
 			$payment_amount_string = ( $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? '(' . wc_price( $amount ) . ')' : wc_price( 0 - $amount );
 
@@ -194,7 +194,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 
 			if ( WC_Lightrail_Metadata::get_order_number_of_failed_transactions( $order ) === 0 ) {
 				$original_status = WC_Lightrail_Metadata::get_order_original_status( $order );
-				$original_status = ( $original_status === '' ) ? 'processing' : $original_status;
+				$original_status = ( '' === $original_status ) ? 'processing' : $original_status;
 				$order->set_status( $original_status, $note = __( 'Fixed all failed transactions.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 				$order->save();
 				$should_be_reloaded = true;
@@ -223,7 +223,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 		public static function lightrail_validate_api_key() {
 			$api_key = WC_Lightrail_Transactions::get_lightrail_api_key();
 
-			if ( ! isset( $api_key ) || $api_key === '' ) {
+			if ( ! isset( $api_key ) || '' === $api_key ) {
 				WC_Lightrail_Admin::display_admin_error_notice( __( 'Lightrail is almost set up - please enter your API access token.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 
 				return false;

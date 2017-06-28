@@ -111,7 +111,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 				$new_balance = WC_Lightrail_Metadata::get_order_balance( $order );
 
 
-				if ( $new_balance == 0 ) { //we're done paying; adjust total and go to success page.
+				if ( 0 == $new_balance ) { //we're done paying; adjust total and go to success page.
 					try {
 						WC_Lightrail_Transactions::capture_all_pending_transactions( $order );
 

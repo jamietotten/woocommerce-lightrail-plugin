@@ -36,7 +36,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 
 			$code_principal = $available_credit_object[WC_Lightrail_API_Constants::CODE_PRINCIPAL]?? array();
 			$code_state = $code_principal [WC_Lightrail_API_Constants::CODE_STATE] ?? '';
-			if ( $code_state !== WC_Lightrail_API_Constants::CODE_STATE_ACTIVE ) {
+			if ( WC_Lightrail_API_Constants::CODE_STATE_ACTIVE !== $code_state ) {
 				throw new Exception( __( 'This gift code is not active.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 			}
 
@@ -54,7 +54,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				$code_principal_balance );
 
 			$code_available_balance = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_available_balance, $code_currency );
-			if ( $code_available_balance == 0 ) {
+			if ( 0 == $code_available_balance ) {
 				throw new Exception( sprintf(
 					__( 'The gift code does not have any value available.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
 				) );
