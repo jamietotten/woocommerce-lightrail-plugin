@@ -79,10 +79,10 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		}
 
 
-		public static function get_order_transactions_total(WC_Order $order ) {
+		public static function get_order_transactions_total( WC_Order $order ) {
 			$order_transactions_array = array_filter( self::get_order_transactions( $order ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
-			$total                    = array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 );
+			$total                   = round (array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 ), 2);
 
 			return $total;
 		}
@@ -93,7 +93,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 				array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
 
-			return array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 );
+			return round( array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 ), 2 );
 		}
 
 
@@ -102,11 +102,11 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 				array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
 
-			return array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 );
+			return round(array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 ),2);
 		}
 
 
-		public static function get_order_original_total(WC_Order $order ) {
+		public static function get_order_original_total( WC_Order $order ) {
 
 			$original_total = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, true );
 			if ( ! isset( $original_total ) || empty( $original_total ) ) {
@@ -116,7 +116,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 			return $original_total;
 		}
 
-		public static function is_order_original_total_set(WC_Order $order ) {
+		public static function is_order_original_total_set( WC_Order $order ) {
 			$original_total = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, true );
 
 			return ( isset( $original_total ) && ! empty( $original_total ) );
@@ -127,16 +127,16 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 
 		}
 
-		public static function set_order_original_status(WC_Order $order, $status ) {
+		public static function set_order_original_status( WC_Order $order, $status ) {
 			update_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $status );
 
 		}
 
-		public static function get_order_original_status(WC_Order $order ) {
+		public static function get_order_original_status( WC_Order $order ) {
 			return get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, true );
 		}
 
-		public static function get_order_balance(WC_Order $order ) {
+		public static function get_order_balance( WC_Order $order ) {
 			if ( isset( $order ) ) {
 				return round( self::get_order_original_total( $order ) - self::get_order_transactions_total( $order ), 2 );
 			}

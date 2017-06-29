@@ -45,7 +45,7 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 
 			$payment_method = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD];
 
-			if ( 'lightrail' === $payment_method ) {
+			if ( WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME === $payment_method ) {
 				$payment_method = 'Gift Code'; //remove lightrail name from customer-facing interface
 			}
 
