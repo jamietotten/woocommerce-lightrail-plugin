@@ -138,7 +138,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 
 		public static function get_order_balance(WC_Order $order ) {
 			if ( isset( $order ) ) {
-				return self::get_order_original_total( $order ) - self::get_order_transactions_total( $order );
+				return round( self::get_order_original_total( $order ) - self::get_order_transactions_total( $order ), 2 );
 			}
 		}
 
