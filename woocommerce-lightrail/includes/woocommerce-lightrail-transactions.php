@@ -24,8 +24,17 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 		}
 
 		public static function get_gift_code_balance( $code, $order_currency ) {
+
+			if ('' === $code) {
+				throw new Exception( __( 'No gift code was provided.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
+			}
+
 			$lightrail_api_key = self::get_lightrail_api_key();
-			$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $lightrail_api_key );
+			try {
+				$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $lightrail_api_key );
+			} catch (Throwable $exception) {
+				throw new Exception( __( 'We could not recognize the gift code you entered.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
+			}
 			$code_currency = $available_credit_object[WC_Lightrail_API_Constants::CODE_CURRENCY];
 			if ( $order_currency !== $code_currency ) {
 				throw new Exception( sprintf(
@@ -36,7 +45,8 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 
 			$code_principal = $available_credit_object[WC_Lightrail_API_Constants::CODE_PRINCIPAL]?? array();
 			$code_state = $code_principal [WC_Lightrail_API_Constants::CODE_STATE] ?? '';
-			if ( $code_state !== WC_Lightrail_API_Constants::CODE_STATE_ACTIVE ) {
+
+			if ( WC_Lightrail_API_Constants::CODE_STATE_ACTIVE !== $code_state ) {
 				throw new Exception( __( 'This gift code is not active.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 			}
 
@@ -54,10 +64,8 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				$code_principal_balance );
 
 			$code_available_balance = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_available_balance, $code_currency );
-			if ( $code_available_balance == 0 ) {
-				throw new Exception( sprintf(
-					__( 'The gift code does not have any value available.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
-				) );
+			if ( 0 == $code_available_balance ) {
+				throw new Exception( __( 'The gift code does not have any value available.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 			}
 
 			return $code_available_balance;
@@ -71,7 +79,6 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				$currency,
 				uniqid( 'woo_' ),
 				$lightrail_api_key,
-//				true,
 				self::get_transaction_server_side_metadata_note( $order ) );
 			$transaction_id = $transaction_result_object[WC_Lightrail_API_Constants::TRANSACTION_ID];
 			$card_id = $transaction_result_object[WC_Lightrail_API_Constants::TRANSACTION_CARD_ID];

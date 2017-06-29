@@ -43,27 +43,6 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 
 		}
 
-//		public static function post_transaction_by_cardid( string $cardId, int $amount, string $currency, string $userSuppliedId, string $api_key, array $metadata = [], bool $pending = false ) {
-//			// Optional crash, for testing purposes
-//            self::please_crash( __FUNCTION__ );
-//
-//			//Business as usual
-//			// NOTE this will need to be updated if using pending transactions
-//
-//			$post_transaction_by_cardid_body = array(
-//				WC_Lightrail_API_Constants::TRANSACTION_USER_SUPPLIED_ID => $userSuppliedId,
-//				WC_Lightrail_API_Constants::TRANSACTION_VALUE          => $amount,
-//				WC_Lightrail_API_Constants::TRANSACTION_CURRENCY       => $currency,
-//				WC_Lightrail_API_Constants::TRANSACTION_METADATA       => $metadata,
-//				WC_Lightrail_API_Constants::TRANSACTION_PENDING        => $pending
-//			);
-//
-//			$response = self::call_lightrail_api_with_headers( sprintf( '/cards/%s/code/transactions', $cardId ), 'post', $api_key, $post_transaction_by_cardid_body );
-//
-//			return self::handle_api_response( $response, 'transaction' );
-//
-//		}
-
 		public static function refund_transaction( array $original_transaction_object_returned_from_post_method, string $userSuppliedId, string $api_key ) {
 			// Optional crash, for testing purposes
 			self::please_crash( __FUNCTION__ );
@@ -128,7 +107,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 		}
 
 		private static function call_lightrail_api_with_headers( string $endpoint, string $method, string $api_key, array $body = [] ) {
-			if ( $method == 'GET' ) {
+			if ( WC_Lightrail_API_Constants::HTTP_GET === $method ) {
 				return wp_safe_remote_get( WC_Lightrail_API_Configs::API_BASE_URL . $endpoint,
 					array(
 						WC_Lightrail_API_Constants::HTTP_HEADERS => self::build_headers( $api_key ),
@@ -136,11 +115,11 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				);
 			}
 
-			if ( $method == 'POST' ) {
+			if ( WC_Lightrail_API_Constants::HTTP_POST === $method ) {
 				return wp_safe_remote_post( WC_Lightrail_API_Configs::API_BASE_URL . $endpoint,
 					array(
 						WC_Lightrail_API_Constants::HTTP_HEADERS => self::build_headers( $api_key ),
-						'body'                                   => json_encode( $body, JSON_FORCE_OBJECT ),
+						WC_Lightrail_API_Constants::HTTP_BODY    => json_encode( $body, JSON_FORCE_OBJECT ),
 					)
 				);
 			}
@@ -209,10 +188,12 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				}
 			}
 
-			$error_info = $error_info . sprintf( " | From method %s with parameters %s",
+			$error_info = (WC_Lightrail_API_Configs::WE_ARE_TESTING)
+				? $error_info . sprintf( " | From method %s with parameters %s",
 					$method_name,
 					json_encode( $parameters, true )
-				);
+				)
+				: '';
 
 			return $error_info;
 		}
