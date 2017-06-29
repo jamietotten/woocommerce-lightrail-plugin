@@ -3,18 +3,19 @@
 if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 	class WC_Lightrail_Metadata {
 
-		private static function get_order_complex_metadata( $order_id, $key ) {
-			$partial_payment_string = get_post_meta( $order_id, $key, true );
+		private static function get_order_complex_metadata( WC_Order $order, $key ) {
+			$value_string = $order->get_meta( $key, true );
 
-			return base64_decode( $partial_payment_string );
+			return base64_decode( $value_string );
 		}
 
-		private static function update_order_complex_metadata( $order_id, $key, $value ) {
-			update_post_meta( $order_id, $key, base64_encode( $value ) );
+		private static function update_order_complex_metadata( WC_Order $order, $key, $value ) {
+			$order->add_meta_data( $key, base64_encode( $value ), true );
+			$order->save();
 		}
 
 		public static function get_order_transactions( WC_Order $order ) {
-			$partial_payment_string = self::get_order_complex_metadata( $order->get_id(), WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY );
+			$partial_payment_string = self::get_order_complex_metadata( $order, WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY );
 
 			if ( isset( $partial_payment_string ) || ! empty ( $partial_payment_string ) ) {
 				$partial_payment_object_array = json_decode( $partial_payment_string, true );
@@ -61,7 +62,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		 */
 		public static function add_order_transaction( WC_Order $order, $payment_object ) {
 
-			$payments_metadata_string = self::get_order_complex_metadata( $order->get_id(), WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY );
+			$payments_metadata_string = self::get_order_complex_metadata( $order, WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY );
 
 			$payments_array = json_decode( $payments_metadata_string, true );
 
@@ -74,7 +75,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 
 			if ( isset( $transaction_id ) ) {
 				$payments_array[ $transaction_id ] = $payment_object;
-				self::update_order_complex_metadata( $order->get_id(), WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, json_encode( $payments_array ) );
+				self::update_order_complex_metadata( $order, WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, json_encode( $payments_array ) );
 			}
 		}
 
@@ -82,7 +83,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		public static function get_order_transactions_total( WC_Order $order ) {
 			$order_transactions_array = array_filter( self::get_order_transactions( $order ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
-			$total                   = round (array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 ), 2);
+			$total                    = round( array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 ), 2 );
 
 			return $total;
 		}
@@ -102,13 +103,11 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 				array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
 
-			return round(array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 ),2);
+			return round( array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 ), 2 );
 		}
 
-
 		public static function get_order_original_total( WC_Order $order ) {
-
-			$original_total = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, true );
+			$original_total = $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, true );
 			if ( ! isset( $original_total ) || empty( $original_total ) ) {
 				$original_total = $order->get_total();
 			}
@@ -117,29 +116,23 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		}
 
 		public static function is_order_original_total_set( WC_Order $order ) {
-			$original_total = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, true );
-
-			return ( isset( $original_total ) && ! empty( $original_total ) );
+			return $order->meta_exists( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
 		}
 
 		public static function set_order_original_total( WC_Order $order, $value ) {
-			update_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, $value );
-
+			$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, $value, true );
 		}
 
 		public static function set_order_original_status( WC_Order $order, $status ) {
-			update_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $status );
-
+			$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $status, true );
 		}
 
 		public static function get_order_original_status( WC_Order $order ) {
-			return get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, true );
+			return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, true );
 		}
 
 		public static function get_order_balance( WC_Order $order ) {
-			if ( isset( $order ) ) {
-				return round( self::get_order_original_total( $order ) - self::get_order_transactions_total( $order ), 2 );
-			}
+			return round( self::get_order_original_total( $order ) - self::get_order_transactions_total( $order ), 2 );
 		}
 
 		public static function get_order_number_of_failed_transactions( $order ) {
