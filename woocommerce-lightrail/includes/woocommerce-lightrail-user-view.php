@@ -133,6 +133,8 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 					$transaction_amount = $order->get_total(); //because our payment gateway sets the order->total to be the remaining balance and this was the last payment.
 					WC_Lightrail_Transactions::post_third_party_captured_transaction( $order, $order->get_payment_method(), $transaction_amount, $order->get_transaction_id() );
 
+					$order->set_total(WC_Lightrail_Metadata::get_order_original_total($order));
+					$order->save();
 					//now we have to capture all lightrail pending transactions on the order
 					try {
 						WC_Lightrail_Transactions::capture_all_pending_transactions( $order );
@@ -155,7 +157,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			$order_id = get_query_var( 'order-pay', 0 );
 			$order = wc_get_order( $order_id );
 			$cancellation_uri = $order->get_cancel_order_url_raw();
-
 
 			$cancel_button_element = '<a class="button alt" name="lightrail_woocommerce_order_cancelled_btn" href="' . $cancellation_uri . '" id="lightrail_woocommerce_checkout_cancel_order_btn">Cancel Order</a>';
 			$cancel_button_adjust_style_script = '<script>
