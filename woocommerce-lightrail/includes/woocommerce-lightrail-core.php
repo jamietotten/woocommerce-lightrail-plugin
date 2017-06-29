@@ -188,10 +188,12 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				}
 			}
 
-			$error_info = $error_info . sprintf( " | From method %s with parameters %s",
+			$error_info = (WC_Lightrail_API_Configs::WE_ARE_TESTING)
+				? $error_info . sprintf( " | From method %s with parameters %s",
 					$method_name,
 					json_encode( $parameters, true )
-				);
+				)
+				: '';
 
 			return $error_info;
 		}
