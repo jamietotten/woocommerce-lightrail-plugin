@@ -127,8 +127,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 		public static function payment_complete_add_last_payment_info_and_capture_all_pending( $order_id ) {
 			$order = wc_get_order( $order_id );
 
-			write_log('payment_complete_add_last_payment_info_and_capture_all_pending was called for order_id '.$order_id);
-
 			if ( isset ( $order ) ) {
 				if ( $order->get_payment_method() !== WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME ) {
 					//first we post the last transaction by the third-party gateway

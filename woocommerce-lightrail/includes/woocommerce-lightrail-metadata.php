@@ -3,9 +3,11 @@
 if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 	class WC_Lightrail_Metadata {
 
-		public static function get_order_transactions( WC_Order $order ) {
+		public static function get_order_transactions( $order ) {
 			if ( isset( $order ) ) {
-				$partial_payment_string = $order->get_meta( WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, true );
+//				$partial_payment_string = $order->get_meta( WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, true );
+				$partial_payment_string = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, true );
+				$partial_payment_string = base64_decode($partial_payment_string);
 				if ( isset( $partial_payment_string ) ) {
 					$partial_payment_object_array = json_decode( $partial_payment_string, true );
 				}
@@ -18,7 +20,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 			$filtered_objects_array = self::get_order_transactions( $order );
 			foreach ( $include as $key => $value ) {
 				$filtered_objects_array = array_filter( $filtered_objects_array, function ( $object ) use ( $key, $value ) {
-					return isset( $object[$key] ) && $object[$key] === $value;
+					return isset( $object[ $key ] ) && $object[ $key ] === $value;
 				} );
 			}
 
@@ -26,13 +28,15 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		}
 
 		static function filter_transactions_that_count_towards_balance( $object ) {
-			return ( ! in_array( $object[WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS],
-				array( WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_VOIDED,
-					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING_TO_CAPTURE ) ) );
+			return ( ! in_array( $object[ WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS ],
+				array(
+					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_VOIDED,
+					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING_TO_CAPTURE
+				) ) );
 		}
 
 		static function transaction_value_sum( $carry, $transaction_object ) {
-			return $carry + $transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE];
+			return $carry + $transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE ];
 		}
 
 
@@ -49,21 +53,41 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		 * );
 		 */
 		public static function add_order_transaction( $order, $payment_object ) {
-			$payments_metadata_string = $order->get_meta( WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY );
+//			$payments_metadata_string = $order->get_meta( WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY );
+			$payments_metadata_string = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, true );
+			$payments_metadata_string = base64_decode($payments_metadata_string);
+			write_log('$payments_metadata_string '. $payments_metadata_string);
+			$payments_array = json_decode( $payments_metadata_string, true );
 
-			if ( isset( $payments_metadata_string ) ) {
-				$payments_array = json_decode( $payments_metadata_string, true );
-			}
+//			if ( ! isset( $partial_payment_string ) || empty( $partial_payment_string ) ) {
+//				$payments_array = array();
+//			} else {
+//				$payments_array = json_decode( $payments_metadata_string, true );
+//			}
+//
+//			if ( isset( $payments_metadata_string ) ) {
+//				$payments_array = json_decode( $payments_metadata_string, true );
+//			}
 
 			if ( ! isset( $payments_array ) ) {
 				$payments_array = array();
 			}
 
-			$transaction_id = $payment_object[WC_Lightrail_Metadata_Constants::TRANSACTION_ID];
+			write_log('$payments_array'. json_encode($payments_array));
+			write_log('$payments_object'. json_encode($payment_object));
+
+			$transaction_id = $payment_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_ID ];
+
+			write_log('transaction id: '. $transaction_id);
 			if ( isset( $transaction_id ) ) {
-				$payments_array[$transaction_id] = $payment_object;
-				$order->add_meta_data( WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, json_encode( $payments_array ), true );
-				$order->save();
+				$payments_array[ $transaction_id ] = $payment_object;
+				//$order->add_meta_data( WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY, json_encode( $payments_array ), true );
+				$result = update_post_meta( $order->get_id(),
+					WC_Lightrail_Metadata_Constants::TRANSACTIONS_METADATA_KEY,
+					base64_encode(json_encode( $payments_array ))
+					 );
+				write_log('result of metadata update ' . $result);
+//				$order->save();
 			}
 		}
 
@@ -71,7 +95,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		public static function get_order_transactions_total( $order ) {
 			$order_transactions_array = array_filter( self::get_order_transactions( $order ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
-			$total = array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 );
+			$total                    = array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 );
 
 			return $total;
 		}
@@ -81,6 +105,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 			$order_transactions_array = array_filter( self::get_order_transactions_in_which( $order,
 				array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) ),
 				'WC_Lightrail_Metadata::filter_transactions_that_count_towards_balance' );
+
 			return array_reduce( $order_transactions_array, 'WC_Lightrail_Metadata::transaction_value_sum', 0 );
 		}
 
@@ -95,39 +120,56 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 
 
 		public static function get_order_original_total( $order ) {
-			if ( isset( $order ) ) {
-				if ( $order->meta_exists( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY ) ) {
-					return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
-				} else {
-					return $order->get_total();
-				}
+//			if ( isset( $order ) ) {
+			$original_total = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, true );
+			write_log('original_total from db: '. $original_total);
+			if ( ! isset( $original_total ) || empty( $original_total ) ) {
+				$original_total = $order->get_total();
 			}
+
+			return $original_total;
+
+//				if ( $order->meta_exists( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY ) ) {
+//					return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
+//				} else {
+//					return $order->get_total();
+//				}
+//			}
 		}
 
 		public static function is_order_original_total_set( $order ) {
-			if ( isset( $order ) ) {
-				return $order->meta_exists( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
-			}
+			$original_total = get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, true );
+
+			return ( isset( $original_total ) && ! empty( $original_total ) );
+
+//			if ( isset( $order ) ) {
+//				return $order->meta_exists( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY );
+//			}
 		}
 
 		public static function set_order_original_total( $order, $value ) {
-			if ( isset( $order ) ) {
-				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, $value, true );
-				$order->save();
-			}
+			update_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, $value );
+
+//			if ( isset( $order ) ) {
+//				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_TOTAL_METADATA_KEY, $value, true );
+//				$order->save();
+//			}
 		}
 
 		public static function set_order_original_status( $order, $status ) {
-			if ( isset( $order ) ) {
-				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $status, true );
-				$order->save();
-			}
+			update_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $status );
+
+//			if ( isset( $order ) ) {
+//				$order->add_meta_data( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, $status, true );
+//				$order->save();
+//			}
 		}
 
 		public static function get_order_original_status( $order ) {
-			if ( isset( $order ) ) {
-				return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY ) ?? '';
-			}
+			return get_post_meta( $order->get_id(), WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY, true );
+//			if ( isset( $order ) ) {
+//				return $order->get_meta( WC_Lightrail_Metadata_Constants::ORIGINAL_STATUS_METADATA_KEY ) ?? '';
+//			}
 		}
 
 		public static function get_order_balance( $order ) {
@@ -137,7 +179,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 		}
 
 		public static function get_order_number_of_failed_transactions( $order ) {
-			$pending_to_void_transactions = self::get_order_transactions_in_which( $order,
+			$pending_to_void_transactions    = self::get_order_transactions_in_which( $order,
 				array( WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS => WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING_TO_VOID ) );
 			$pending_to_capture_transactions = self::get_order_transactions_in_which( $order,
 				array( WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS => WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING_TO_CAPTURE ) );
