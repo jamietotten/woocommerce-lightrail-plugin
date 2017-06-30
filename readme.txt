@@ -75,11 +75,11 @@ To avoid confusion on the checkout page, if you are using Lightrail gift codes, 
 
 == Screenshots ==
 
-1.
-2.
-3.
-4.
-5.
+1. Create and download gift card codes from Lightrail to send to your customers.
+2. After installing Lightrail for WooCommerce, Lightrail codes are redeemable in your WooCommerce checkout.
+3. View Lightrail gift code redemption details in your WordPress dashboard.
+4. Lightrail for WooCommerce also supports refunds.
+5. Track individual card details and transactions in Lightrail.
 
 == Changelog ==
 
