@@ -4,12 +4,12 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 	class WC_Gateway_Lightrail extends WC_Payment_Gateway {
 
 		public function __construct() {
-			$this->id = WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME;
+			$this->id         = WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME;
 			$this->has_fields = true;
 
 			$this->init_form_fields();
 
-			$this->title = $this->get_option( 'title' );
+			$this->title       = $this->get_option( 'title' );
 			$this->description = $this->get_option( 'description' );
 
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
@@ -99,7 +99,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 				$total = WC_Lightrail_Metadata::get_order_balance( $order );
 
 				//the gift code is passed on as a post request param
-				$code = $_POST['lightrail_gift_code'];
+				$code           = $_POST['lightrail_gift_code'];
 				$order_currency = get_option( 'woocommerce_currency' );
 
 				$available_credit = WC_Lightrail_Transactions::get_gift_code_balance( $code, $order_currency );

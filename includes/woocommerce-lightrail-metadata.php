@@ -39,7 +39,7 @@ if ( ! class_exists( 'WC_Lightrail_Metadata' ) ) {
 			return ( ! in_array( $object[ WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS ],
 				array(
 					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_VOIDED,
-					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING_TO_CAPTURE
+					WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING_TO_CAPTURE,
 				) ) );
 		}
 
