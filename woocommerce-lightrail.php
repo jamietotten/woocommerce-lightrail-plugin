@@ -50,6 +50,7 @@ if ( ! function_exists( 'lightrail_init_woo_gateway' ) ) {
 		include_once 'includes/woocommerce-lightrail-user-view.php';
 		include_once 'includes/woocommerce-lightrail-payment-gateway.php';
 
+
 		//Localisation
 		load_plugin_textdomain( 'woocommerce_lightrail', false, dirname( plugin_basename( __FILE__ ) ) . '/' );
 	}
@@ -59,6 +60,19 @@ if ( ! function_exists( 'lightrail_init_woo_gateway' ) ) {
 	add_action( 'init', 'WC_Lightrail_Admin::init' );
 	add_action( 'init', 'WC_Lightrail_User::init' );
 }
+
+if ( ! function_exists('plugin_add_settings_link') ) {
+	function plugin_add_settings_link( $links ) {
+		$settings_link = '<a href="admin.php?page=wc-settings&tab=checkout&section=lightrail">' . __( 'Settings' ) . '</a>';
+		array_push( $links, $settings_link );
+
+		return $links;
+	}
+
+	$plugin = plugin_basename( __FILE__ );
+	add_filter( 'plugin_action_links_$plugin', 'plugin_add_settings_link' );
+}
+
 
 /**
  * Register Gateway

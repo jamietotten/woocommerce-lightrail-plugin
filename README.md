@@ -19,7 +19,8 @@ The following features are supported in the current version (1.0.0) of this plug
 -  Issue full order refund by the store admin when an order is paid by a gift code.
 -  Detailed log of all the transactions on an order for the store admin. 
 
-The current version of this plugin has been tested to work seamlessly with [Stripe](https://en-ca.wordpress.org/plugins/woocommerce-gateway-stripe/) and [CardConnect](https://en-ca.wordpress.org/plugins/cardconnect-payment-module/) WooCommerce plugins.
+The current version of this plugin has been tested to work seamlessly with [Stripe](https://en-ca.wordpress.org/plugins/woocommerce-gateway-stripe/) 
+and [CardConnect](https://en-ca.wordpress.org/plugins/cardconnect-payment-module/) WooCommerce plugins.
 
 ## Installation
 
@@ -48,10 +49,10 @@ In order for this plugin to work, the WooComerce wordpress plugin must be instal
 
 ### Set Up Lightrail Payment Gateway
 
-In order to connect with the Lightrail API, the plugin needs valid Lightrail API keys. 
+In order to connect with the Lightrail API, the plugin needs valid Lightrail API keys. You can find your API key in your  [Lightrail dashboard](https://www.lightrail.com/app/#/login): Go to `Account Settings`, click your user badge in the top right corner, and then click on `API`.
 
-1. Find your API key in your  [Lightrail dashboard](https://www.lightrail.com/app/#/login): Go to `Account Settings`, click your user badge in the top right corner, and then click on `API`.
-2. Enter your API key into the Lightrail for WooCommerce settings page: from the WordPress dashboard go to `WooCommerce` > `Settings` > `Checkout` tab. Scroll down to the bottom of the page under `Payment Gateways ` and click on `Gift Code` by Lightrail. Paste the API Key in the text area.
+Once you found your API key, enter it in the Lightrail for WooCommerce settings page. The settings are in `WooCommerce` > `Settings` > `Checkout` tab where you can scroll down to the bottom of the page under `Payment Gateways ` and find `Gift Code` by Lightrail. 
+Alternatively, you can directly go to the settings page by clicking on the `Settings` link under Lightrail for WooCommerce plugin name on Wordpress `Plugins` page.
 
 ### WooCommerce Coupons
 
