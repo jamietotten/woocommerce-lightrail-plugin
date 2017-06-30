@@ -38,7 +38,7 @@ This requires the following dependencies.
 
 In order for this plugin to work, the WooComerce wordpress plugin must be installed and activated.
 
-=== Upload and activate the plugin ===
+== Upload and activate the plugin ==
 
 = Wordpress admin dashboard: =
 
