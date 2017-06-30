@@ -75,6 +75,12 @@ To avoid confusion on the checkout page, if you are using Lightrail gift codes, 
 
 == Screenshots ==
 
+1.
+2.
+3.
+4.
+5.
+
 == Changelog ==
 
 = 1.0.0-beta.1 =
