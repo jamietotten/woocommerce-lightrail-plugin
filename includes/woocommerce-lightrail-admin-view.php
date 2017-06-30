@@ -41,17 +41,17 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 		}
 
 		private static function get_admin_row_for_transaction_object( $order_transaction_object ) {
-			$amount = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE];
-			$transaction_status_string = WC_Lightrail_Admin::$LIGHTRAIL_TRANSACTION_STATUS_ADMIN_VIEW[$order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS]];
-			$transaction_type_string = ( $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND )
+			$amount                    = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE ];
+			$transaction_status_string = WC_Lightrail_Admin::$LIGHTRAIL_TRANSACTION_STATUS_ADMIN_VIEW[ $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS ] ];
+			$transaction_type_string   = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND )
 				? ' Refund via ' : ' ';
-			$notes_string = $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE] ?? '';
-			$notes_string = ( '' !== $notes_string ) ? ' (' . $notes_string . ')' : '';
-			$payment_amount_string = ( $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
+			$notes_string              = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? '';
+			$notes_string              = ( '' !== $notes_string ) ? ' (' . $notes_string . ')' : '';
+			$payment_amount_string     = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? '(' . wc_price( $amount ) . ')' : wc_price( 0 - $amount );
 
 			echo '<tr>
-						<td class="label">' . $transaction_status_string . $transaction_type_string . $order_transaction_object[WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD] . $notes_string . ':' . '</td><td width="1%"></td>
+						<td class="label">' . $transaction_status_string . $transaction_type_string . $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD ] . $notes_string . ':' . '</td><td width="1%"></td>
 						<td class="total">' . $payment_amount_string . '</td>
 				  </tr>';
 
@@ -62,7 +62,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 			$order = wc_get_order( $order_id );
 
 			$order_payments_array = WC_Lightrail_Metadata::get_order_transactions_in_which( $order, array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) );
-			$order_refunds_array = WC_Lightrail_Metadata::get_order_transactions_in_which( $order, array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
+			$order_refunds_array  = WC_Lightrail_Metadata::get_order_transactions_in_which( $order, array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
 
 			write_log( sprintf( 'total of %d transactions on order %s', count( WC_Lightrail_Metadata::get_order_transactions( $order ) ), $order_id ) . json_encode( WC_Lightrail_Metadata::get_order_transactions( $order ) ) );
 
@@ -96,8 +96,8 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 
 		public static function order_item_add_action_buttons_frefund( $order ) {
 			$frefund_button_title = __( 'Full Refund via Lightrail', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-			$frefund_url = wp_nonce_url( admin_url( 'admin-ajax.php' ), 'frefund_' . $order->get_id() );
-			$onclick_java_script = self::get_javascript_code_for_ajax_action( 'frefund', $order->get_id(), $frefund_url );
+			$frefund_url          = wp_nonce_url( admin_url( 'admin-ajax.php' ), 'frefund_' . $order->get_id() );
+			$onclick_java_script  = self::get_javascript_code_for_ajax_action( 'frefund', $order->get_id(), $frefund_url );
 			echo '<button type="button" id= "lightrail-frefund-btn" class="button" onclick="' . $onclick_java_script . '">' . $frefund_button_title . '</button>';
 		}
 
@@ -110,11 +110,11 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 			$order = wc_get_order( $order_id );
 
 			$total_refunds_or_voids = 0;
-			$should_be_reloaded = false;
+			$should_be_reloaded     = false;
 
 			try {
 				$total_refunds_or_voids = WC_Lightrail_Transactions::refund_all_transactions( $order );
-				$should_be_reloaded = $should_be_reloaded || $total_refunds_or_voids > 0;
+				$should_be_reloaded     = $should_be_reloaded || $total_refunds_or_voids > 0;
 
 			} catch ( Throwable $exception ) {
 				$order->add_order_note( sprintf( __( 'Could not refund some of the payments.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) ) );
@@ -135,7 +135,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 				$should_be_reloaded = true;
 			}
 
-			$message = ( $total_refunds_or_voids > 0 )
+			$message  = ( $total_refunds_or_voids > 0 )
 				? sprintf( __( '%s transactions refunded (or canceled if pending).', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $total_refunds_or_voids . '' )
 				: sprintf( __( 'No new transactions refunded/canceled.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 			$response = array(
@@ -150,7 +150,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 		public static function order_item_add_action_buttons_retry( $order ) {
 			if ( WC_Lightrail_Metadata::get_order_number_of_failed_transactions( $order ) > 0 ) {
 				$retry_button_title = __( 'Fix Failed Transctions', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-				$retry_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=retry&order_id=' . $order->get_id() ), 'retry_' . $order->get_id() );
+				$retry_url          = wp_nonce_url( admin_url( 'admin-ajax.php?action=retry&order_id=' . $order->get_id() ), 'retry_' . $order->get_id() );
 
 				$onclick_java_script = self::get_javascript_code_for_ajax_action( 'retry', $order->get_id(), $retry_url );;
 				echo '<button type="button" id= "lightrail-retry-btn" class="button" onclick="' . $onclick_java_script . '">' . $retry_button_title . '</button>';
@@ -164,7 +164,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 
 			$order = wc_get_order( $order_id );
 			if ( WC_Lightrail_Metadata::get_order_number_of_failed_transactions( $order ) == 0 ) {
-				$message = __( 'There are no failed transactions on this order', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
+				$message  = __( 'There are no failed transactions on this order', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
 				$response = array(
 					'message' => $message,
 					'fixes'   => 0 . '',
@@ -174,11 +174,11 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 			}
 
 			$total_transactions_fixed = 0;
-			$should_be_reloaded = false;
+			$should_be_reloaded       = false;
 
 			try {
 				$total_transactions_fixed = WC_Lightrail_Transactions::retry_all_failed_transactions( $order );
-				$should_be_reloaded = $should_be_reloaded || $total_transactions_fixed > 0;
+				$should_be_reloaded       = $should_be_reloaded || $total_transactions_fixed > 0;
 			} catch ( Throwable $exception ) {
 				$response = array(
 					'message' => sprintf( __( 'Error occurred while trying to fix failed transactions. %s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $exception->getMessage() ),
@@ -211,7 +211,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 		}
 
 		public static function display_admin_error_notice( $message ) {
-			$class = 'notice notice-error';
+			$class           = 'notice notice-error';
 			$display_message = $message;
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $display_message ) );
 		}

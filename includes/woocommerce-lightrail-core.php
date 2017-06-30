@@ -15,11 +15,13 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 
 		public static function api_ping( string $api_key ) {
 			$response = self::call_lightrail_api_with_headers( WC_Lightrail_API_Constants::ENDPOINT_PING, WC_Lightrail_API_Constants::HTTP_GET, $api_key );
+
 			return self::handle_api_response( $response, WC_Lightrail_API_Constants::API_RESPONSE_KEY_USER );
 		}
 
 		public static function get_available_credit( string $code, string $api_key ) {
 			$response = self::call_lightrail_api_with_headers( sprintf( WC_Lightrail_API_Constants::ENDPOINT_BALANCE, $code ), WC_Lightrail_API_Constants::HTTP_GET, $api_key );
+
 			return self::handle_api_response( $response, WC_Lightrail_API_Constants::API_RESPONSE_KEY_BALANCE );
 		}
 
@@ -48,8 +50,8 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 			self::please_crash( __FUNCTION__ );
 
 			//Business as usual
-			$cardId = $original_transaction_object_returned_from_post_method[WC_Lightrail_API_Constants::TRANSACTION_CARD_ID] ?? null;
-			$original_transaction_id = $original_transaction_object_returned_from_post_method[WC_Lightrail_API_Constants::TRANSACTION_ID] ?? null;
+			$cardId                  = $original_transaction_object_returned_from_post_method[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ] ?? null;
+			$original_transaction_id = $original_transaction_object_returned_from_post_method[ WC_Lightrail_API_Constants::TRANSACTION_ID ] ?? null;
 
 			if ( $cardId && $original_transaction_id ) {
 				$refund_request_body = array(
@@ -87,9 +89,9 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 		private static function handle_api_response( $response, string $json_response_object_name ) {
 			//Check for happy path first
 			if ( ! is_wp_error( $response ) && ( wp_remote_retrieve_response_code( $response ) == 200 ) ) {
-				$decoded_response = json_decode( $response[WC_Lightrail_API_Constants::API_RESPONSE_KEY_BODY], true ) ?? [];
-				if ( isset( $decoded_response[$json_response_object_name] ) ) {
-					return $decoded_response[$json_response_object_name];
+				$decoded_response = json_decode( $response[ WC_Lightrail_API_Constants::API_RESPONSE_KEY_BODY ], true ) ?? [];
+				if ( isset( $decoded_response[ $json_response_object_name ] ) ) {
+					return $decoded_response[ $json_response_object_name ];
 				} else {
 					$error_message = self::get_printable_error_info( __FUNCTION__, func_get_args(), $response, sprintf( "A 200 OK was received, but the requested key '%s' was not found in the response body.", $json_response_object_name ) );
 					write_log( $error_message );
@@ -97,9 +99,9 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				}
 			} else {
 				// Handle WP_Error or non-200 HTTP response
-				$calledByFunction = self::getCallerAndCallerArgs()[0];
+				$calledByFunction   = self::getCallerAndCallerArgs()[0];
 				$callerFunctionArgs = self::getCallerAndCallerArgs()[1];
-				$error_info = self::get_printable_error_info( $calledByFunction, $callerFunctionArgs, $response, "Triggered by the method 'handle_api_response()' - remainder of this message pertains to the method that called it: " );
+				$error_info         = self::get_printable_error_info( $calledByFunction, $callerFunctionArgs, $response, "Triggered by the method 'handle_api_response()' - remainder of this message pertains to the method that called it: " );
 				write_log( $error_info );
 				throw new Exception( $error_info );
 			}
@@ -138,10 +140,10 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 		}
 
 		private static function handle_pending_transaction( array $original_transaction_object_returned_from_post_method, string $userSuppliedId, string $action, string $api_key ) {
-			$cardId = $original_transaction_object_returned_from_post_method[WC_Lightrail_API_Constants::TRANSACTION_CARD_ID] ?? null;
-			$original_transaction_id = $original_transaction_object_returned_from_post_method[WC_Lightrail_API_Constants::TRANSACTION_ID] ?? null;
-			$original_metadata = $original_transaction_object_returned_from_post_method[WC_Lightrail_API_Constants::TRANSACTION_METADATA] ?? null;
-			$body = array(
+			$cardId                  = $original_transaction_object_returned_from_post_method[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ] ?? null;
+			$original_transaction_id = $original_transaction_object_returned_from_post_method[ WC_Lightrail_API_Constants::TRANSACTION_ID ] ?? null;
+			$original_metadata       = $original_transaction_object_returned_from_post_method[ WC_Lightrail_API_Constants::TRANSACTION_METADATA ] ?? null;
+			$body                    = array(
 				WC_Lightrail_API_Constants::TRANSACTION_USER_SUPPLIED_ID => $userSuppliedId,
 				WC_Lightrail_API_Constants::TRANSACTION_METADATA         => $original_metadata,
 			);
@@ -188,7 +190,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				}
 			}
 
-			$error_info = (WC_Lightrail_API_Configs::WE_ARE_TESTING)
+			$error_info = ( WC_Lightrail_API_Configs::WE_ARE_TESTING )
 				? $error_info . sprintf( " | From method %s with parameters %s",
 					$method_name,
 					json_encode( $parameters, true )
@@ -200,8 +202,9 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 
 		private static function getCallerAndCallerArgs() {
 			$trace = debug_backtrace();
-			$name = $trace[2]['function'] ?? 'global';
-			$args = $trace[2]['args'] ?? [];
+			$name  = $trace[2]['function'] ?? 'global';
+			$args  = $trace[2]['args'] ?? [];
+
 			return array( $name, $args );
 		}
 
