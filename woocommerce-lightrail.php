@@ -4,7 +4,7 @@
 Plugin Name: Lightrail for WooCommerce
 Plugin URI: http://lightrail.com
 Description: Acquire and retain customers using account credits, gift cards, promotions, and points.
-Version: 1.0.0-alpha
+Version: 1.0.0-beta.1
 Author: Lightrail
 Author URI: http://lightrail.com
 License: GPL2
@@ -27,9 +27,9 @@ define( 'WC_LIGHTRAIL_MIN_WOOC_VER', '3.0.0' );
 if ( ! function_exists( 'lightrail_compatibility_tests' ) ) {
 	function lightrail_compatibility_tests() {
 		return ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) //woocommerce is installed and active
-			&& version_compare( phpversion(), WC_LIGHTRAIL_MIN_PHP_VER, '>=' )
-			&& defined( 'WC_VERSION' )
-			&& version_compare( WC_VERSION, WC_LIGHTRAIL_MIN_WOOC_VER, '>=' );
+		       && version_compare( phpversion(), WC_LIGHTRAIL_MIN_PHP_VER, '>=' )
+		       && defined( 'WC_VERSION' )
+		       && version_compare( WC_VERSION, WC_LIGHTRAIL_MIN_WOOC_VER, '>=' );
 	}
 }
 
@@ -50,6 +50,7 @@ if ( ! function_exists( 'lightrail_init_woo_gateway' ) ) {
 		include_once 'includes/woocommerce-lightrail-user-view.php';
 		include_once 'includes/woocommerce-lightrail-payment-gateway.php';
 
+
 		//Localisation
 		load_plugin_textdomain( 'woocommerce_lightrail', false, dirname( plugin_basename( __FILE__ ) ) . '/' );
 	}
@@ -59,6 +60,19 @@ if ( ! function_exists( 'lightrail_init_woo_gateway' ) ) {
 	add_action( 'init', 'WC_Lightrail_Admin::init' );
 	add_action( 'init', 'WC_Lightrail_User::init' );
 }
+
+if ( ! function_exists('plugin_add_settings_link') ) {
+	function plugin_add_settings_link( $links ) {
+		$settings_link = '<a href="admin.php?page=wc-settings&tab=checkout&section=lightrail">' . __( 'Settings' ) . '</a>';
+		array_push( $links, $settings_link );
+
+		return $links;
+	}
+
+	$plugin = plugin_basename( __FILE__ );
+	add_filter( 'plugin_action_links_$plugin', 'plugin_add_settings_link' );
+}
+
 
 /**
  * Register Gateway
