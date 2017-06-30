@@ -11,9 +11,20 @@ WC tested up to: 3.1
 Acquire and retain customers using account credits, gift cards, promotions, and points.
 
 == Description ==
-A Wordpress plugin which enables WooCommerce merchants to integrate with the Lightrail ecosystem.
-Lightrail is a modern account credit and gift card platform used by marketplaces and brands to acquire, retain, and reward customers.
+Lightrail for WooCommerce allows Lightrail’s gift codes to be redeemed in your WooCommerce checkout. You can view & track gift code redemptions and also issue gift code refunds from your WordPress dashboard.
+
+Lightrail is a modern platform for digital account credits, gift cards, promotions and points—made for customer acquisition and retention.
+
 To learn more, visit [Lightrail](https://www.lightrail.com/).
+
+== How to Get Started ==
+
+* Get a Lightrail account [here](https://www.lightrail.com/)
+* Install plugin
+* Generate and download gift codes from Lightrail
+* Distribute your WooCommerce-ready gift codes to customers
+
+To connect the plugin with your Lightrail account to process gift cards, you will need to enter your Lightrail API key in the plugin settings as detailed below.
 
 == Features ==
 The following features are supported in the current version (1.0.0) of this plugin:
