@@ -83,6 +83,9 @@ To avoid confusion on the checkout page, if you are using Lightrail gift codes, 
 
 == Changelog ==
 
+= 1.0.1 =
+* bumping up the version to submit to Wordpress.
+
 = 1.0.0-beta.1 =
 * Tested with WooCommerce 3.1.0
 * Test with Stripe, PaylPal Standard, and CardConnect
