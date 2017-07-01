@@ -1,0 +1,7 @@
+*.git*
+*.config-files*
+*.idea*
+*.DS_Store*
+woocommerce-lightrail.iml
+release.sh
+exclude.lst

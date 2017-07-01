@@ -61,16 +61,13 @@ if ( ! function_exists( 'lightrail_init_woo_gateway' ) ) {
 	add_action( 'init', 'WC_Lightrail_User::init' );
 }
 
-if ( ! function_exists('plugin_add_settings_link') ) {
-	function plugin_add_settings_link( $links ) {
-		$settings_link = '<a href="admin.php?page=wc-settings&tab=checkout&section=lightrail">' . __( 'Settings' ) . '</a>';
-		array_push( $links, $settings_link );
+if ( ! function_exists( 'lightrail_plugin_add_settings_link' ) ) {
+	add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'lightrail_plugin_add_settings_link' );
 
-		return $links;
+	function lightrail_plugin_add_settings_link( $existing_links ) {
+		$settings_link = array( '<a href="admin.php?page=wc-settings&tab=checkout&section=lightrail">' . __( 'Settings' ) . '</a>', );
+		return array_merge( $existing_links, $settings_link );
 	}
-
-	$plugin = plugin_basename( __FILE__ );
-	add_filter( 'plugin_action_links_$plugin', 'plugin_add_settings_link' );
 }
 
 
