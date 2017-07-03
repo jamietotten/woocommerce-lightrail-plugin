@@ -3,7 +3,7 @@
 /*
 Plugin Name: Lightrail for WooCommerce
 Description: Acquire and retain customers using account credits, gift cards, promotions, and points.
-Version: 1.0.1
+Version: 1.0.2
 Author: Lightrail
 Author URI: http://lightrail.com
 License: GPL2

@@ -27,7 +27,7 @@ To learn more, visit [Lightrail](https://www.lightrail.com/).
 To connect the plugin with your Lightrail account to process gift cards, you will need to enter your Lightrail API key in the plugin settings as detailed below.
 
 == Features ==
-The following features are supported in the current version (1.0.0) of this plugin:
+The following features are supported in the current version (1.0.2) of this plugin:
 
 * Pay for an order by a gift code.
 * Split payment on an order using a gift code and another payment method.
@@ -83,8 +83,11 @@ To avoid confusion on the checkout page, if you are using Lightrail gift codes, 
 
 == Changelog ==
 
+= 1.0.2 =
+* Improvements to readme & assets for display in WordPress directory listing
+
 = 1.0.1 =
-* bumping up the version to submit to Wordpress.
+* Bumping up the version to submit to WordPress.
 
 = 1.0.0-beta.1 =
 * Tested with WooCommerce 3.1.0
