@@ -49,15 +49,15 @@ This requires the following dependencies.
 
 In order for this plugin to work, the WooComerce wordpress plugin must be installed and activated.
 
-== Upload and activate the plugin ==
+= Upload and activate the plugin =
 
-= Wordpress admin dashboard: =
+Through the Wordpress admin dashboard:
 
 1. Go to `Plugins` > `Add new` > `Upload Plugin`.
 2. Click `Choose File`, select the plugin `zip`, and click `Install Now`.
 3. Click `Activate Plugin` when prompted.
 
-= SFTP: =
+By SFTP:
 
 1. Copy the `woocommerce-lightrail` folder into the `wp-content/plugins` directory of your Wordpress instance.
 2. Activate the plugin through the `Plugins` menu in WordPress.
