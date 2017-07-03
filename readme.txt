@@ -2,7 +2,7 @@
 Contributors: lightrailintegrations
 Tags: woocommerce, giftcard
 Requires at least: 4.7
-Tested up to: 4.7
+Tested up to: 4.8
 Stable tag: trunk
 License: GPL2
 WC requires at least: 3.0
@@ -27,7 +27,7 @@ To learn more, visit [Lightrail](https://www.lightrail.com/).
 To connect the plugin with your Lightrail account to process gift cards, you will need to enter your Lightrail API key in the plugin settings as detailed below.
 
 == Features ==
-The following features are supported in the current version (1.0.0) of this plugin:
+The following features are supported in the current version (1.0.2) of this plugin:
 
 * Pay for an order by a gift code.
 * Split payment on an order using a gift code and another payment method.
@@ -49,15 +49,20 @@ This requires the following dependencies.
 
 In order for this plugin to work, the WooComerce wordpress plugin must be installed and activated.
 
-== Upload and activate the plugin ==
+= Install and activate the plugin =
 
-= Wordpress admin dashboard: =
+Option 1 - Install automatically through your WordPress dashboard:
 
-1. Go to `Plugins` > `Add new` > `Upload Plugin`.
+1. Go to `Plugins` > `Add new` and use the search field to search for `Lightrail for WooCommerce`
+2. Click `Install Now` and then `Activate`
+
+Option 2 - Upload the plugin file:
+
+1. In your WordPress dashboard, go to `Plugins` > `Add new` > `Upload Plugin`.
 2. Click `Choose File`, select the plugin `zip`, and click `Install Now`.
 3. Click `Activate Plugin` when prompted.
 
-= SFTP: =
+Option 3 - By SFTP:
 
 1. Copy the `woocommerce-lightrail` folder into the `wp-content/plugins` directory of your Wordpress instance.
 2. Activate the plugin through the `Plugins` menu in WordPress.
@@ -83,8 +88,11 @@ To avoid confusion on the checkout page, if you are using Lightrail gift codes, 
 
 == Changelog ==
 
+= 1.0.2 =
+* Improvements to readme & assets for display in WordPress directory listing
+
 = 1.0.1 =
-* bumping up the version to submit to Wordpress.
+* Bumping up the version to submit to WordPress.
 
 = 1.0.0-beta.1 =
 * Tested with WooCommerce 3.1.0
