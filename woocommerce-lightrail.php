@@ -2,6 +2,7 @@
 
 /*
 Plugin Name: Lightrail for WooCommerce
+Plugin URI: https://wordpress.org/plugins/lightrail-for-woocommerce/
 Description: Acquire and retain customers using account credits, gift cards, promotions, and points.
 Version: 1.0.2
 Author: Lightrail
