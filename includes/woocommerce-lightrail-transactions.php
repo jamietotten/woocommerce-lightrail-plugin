@@ -26,7 +26,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				$item_metadata                 = array(
 					'id'         => $order_item->get_product_id(),
 					'quantity'   => $order_item->get_quantity(),
-					'unit_price' => $item_product->get_price(),
+					'unit_price' => WC_Lightrail_Currency::lightrail_currency_major_to_minor( $item_product->get_price(), $currency ),
 					'tags'       => $item_metadata_tags
 				);
 				$items_metadata[ $counter ++ ] = $item_metadata;
@@ -40,7 +40,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 					'total' => WC_Lightrail_Currency::lightrail_currency_major_to_minor( $order->get_total(), $currency ),
 					'items' => $items_metadata
 				),
-				'_split-tender-total' => $order->get_total()
+				'_split-tender-total' => WC_Lightrail_Currency::lightrail_currency_major_to_minor( $order->get_total(), $currency )
 			);
 
 			return $metadata;
