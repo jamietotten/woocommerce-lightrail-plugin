@@ -102,7 +102,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 				$code           = $_POST['lightrail_gift_code'];
 				$order_currency = get_option( 'woocommerce_currency' );
 
-				$available_credit = WC_Lightrail_Transactions::get_gift_code_balance( $code, $order_currency );
+				$available_credit = WC_Lightrail_Transactions::get_gift_code_balance( $code, $order, $total, $order_currency );
 
 				//if there is not enough credit we will pay what we can with the code and go back to the payment page for paying the remainder
 				$amount_to_charge = ( $available_credit < $total ) ? $available_credit : $total;

@@ -11,10 +11,39 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			return $available_gateways [ WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME ]->get_option( 'api_key' );
 		}
 
-		private static function get_transaction_server_side_metadata_note( $order ) {
-			$metadata_string = sprintf( '{"giftbit-note": {"note":"WooCommerce Order %s"}}', $order->get_id() );
+		private static function get_lightrail_transaction_metadata( $order, $currency ) {
+			$order_items    = $order->get_items();
+			$items_metadata = array();
+			$counter        = 0;
+			foreach ( $order_items as $item_key => $order_item ) {
+				$item_product = $order_item->get_product();
+				$item_metadata_tags = array_map( "get_the_category_by_ID", $item_product->get_category_ids() );
+				foreach ( $item_product->get_tag_ids() as $tag_id ) {
+					array_push( $item_metadata_tags, get_tag( $tag_id )->name );
+				}
 
-			return json_decode( $metadata_string, true );
+
+				$item_metadata                 = array(
+					'id'         => $order_item->get_product_id(),
+					'quantity'   => $order_item->get_quantity(),
+					'unit_price' => $item_product->get_price(),
+					'tags'       => $item_metadata_tags
+				);
+				$items_metadata[ $counter ++ ] = $item_metadata;
+			}
+
+			$metadata = array(
+				'giftbit-note' => array(
+					'note' => sprintf( 'WooCommerce Order %s', $order->get_id() )
+				),
+				'cart'         => array(
+					'total' => WC_Lightrail_Currency::lightrail_currency_major_to_minor( $order->get_total(), $currency ),
+					'items' => $items_metadata
+				),
+				'_split-tender-total' => $order->get_total()
+			);
+
+			return $metadata;
 		}
 
 		private static function link_to_card_page_on_lightrail_webapp( $display_text, $card_id ) {
@@ -23,7 +52,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			return sprintf( '<a href="%s">%s</a>', $link, $display_text );
 		}
 
-		public static function get_gift_code_balance( $code, $order_currency ) {
+		public static function get_gift_code_balance( $code, $order, $amount, $order_currency ) {
 
 			if ( '' === $code ) {
 				throw new Exception( __( 'No gift code was provided.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
@@ -31,39 +60,21 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 
 			$lightrail_api_key = self::get_lightrail_api_key();
 			try {
-				$available_credit_object = WC_LightrailEngine::get_available_credit( $code, $lightrail_api_key );
+				$dryrun_result_object = WC_LightrailEngine::post_dryrun_transaction_by_code(
+					$code,
+					( 0 - WC_Lightrail_Currency::lightrail_currency_major_to_minor( $amount, $order_currency ) ),
+					$order_currency,
+					uniqid( 'woo_' ),
+					$lightrail_api_key,
+					self::get_lightrail_transaction_metadata( $order, $order_currency )
+				);
+				$code_available_balance = 0-$dryrun_result_object[WC_Lightrail_API_Constants::TRANSACTION_VALUE];
+
 			} catch ( Throwable $exception ) {
 				throw new Exception( __( 'We could not recognize the gift code you entered.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 			}
-			$code_currency = $available_credit_object[ WC_Lightrail_API_Constants::CODE_CURRENCY ];
-			if ( $order_currency !== $code_currency ) {
-				throw new Exception( sprintf(
-					__( 'Currency mismatch. Attempting to pay %s value with %s.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
-					$order_currency,
-					$code_currency ) );
-			}
 
-			$code_principal = $available_credit_object[ WC_Lightrail_API_Constants::CODE_PRINCIPAL ]?? array();
-			$code_state     = $code_principal [ WC_Lightrail_API_Constants::CODE_STATE ] ?? '';
-
-			if ( WC_Lightrail_API_Constants::CODE_STATE_ACTIVE !== $code_state ) {
-				throw new Exception( __( 'This gift code is not active.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
-			}
-
-			$code_principal_balance = $code_principal [ WC_Lightrail_API_Constants::CODE_CURRENT_VALUE ] ?? 0;
-
-			$value_attachments = $available_credit_object [ WC_Lightrail_API_Constants::CODE_ATTACHED ] ?? array();
-
-			$active_value_attachments = array_filter( $value_attachments, function ( $attachment ) {
-				return $attachment[ WC_Lightrail_API_Constants::CODE_STATE ] === WC_Lightrail_API_Constants::CODE_STATE_ACTIVE;
-			} );
-			$code_available_balance   = array_reduce( $active_value_attachments,
-				function ( $carry, $attachment ) {
-					return $carry + $attachment[ WC_Lightrail_API_Constants::CODE_CURRENT_VALUE ];
-				},
-				$code_principal_balance );
-
-			$code_available_balance = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_available_balance, $code_currency );
+			$code_available_balance = WC_Lightrail_Currency::lightrail_currency_minor_to_major( $code_available_balance, $order_currency );
 			if ( 0 == $code_available_balance ) {
 				throw new Exception( __( 'The gift code does not have any value available.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
 			}
@@ -73,13 +84,14 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 
 		public static function post_pending_payment_transaction_by_code( $order, $code, $amount, $currency ) {
 			$lightrail_api_key         = self::get_lightrail_api_key();
-			$transaction_result_object = WC_LightrailEngine::post_transaction_by_code(
+			$transaction_result_object = WC_LightrailEngine::post_pending_transaction_by_code(
 				$code,
 				( 0 - WC_Lightrail_Currency::lightrail_currency_major_to_minor( $amount, $currency ) ),
 				$currency,
 				uniqid( 'woo_' ),
 				$lightrail_api_key,
-				self::get_transaction_server_side_metadata_note( $order ) );
+				self::get_lightrail_transaction_metadata( $order, $currency )
+			);
 			$transaction_id            = $transaction_result_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ];
 			$card_id                   = $transaction_result_object[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ];
 
