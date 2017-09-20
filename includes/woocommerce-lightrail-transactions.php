@@ -86,7 +86,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			$returned_value_stores        = array();
 			$lightrail_api_key            = self::get_lightrail_api_key();
 			$card_details_response_object = WC_LightrailEngine::get_card_details_by_code( $code, $lightrail_api_key );
-			$value_stores                 = [ WC_Lightrail_API_Constants::CARD_DETAILS_VALUE_STORES ];
+			$value_stores                 = $card_details_response_object[ WC_Lightrail_API_Constants::CARD_DETAILS_VALUE_STORES ];
 			foreach ( $value_stores as $value_store ) {
 				$returned_value_stores[ $value_store[ WC_Lightrail_API_Constants::VALUE_STORE_ID ] ] = $value_store;
 			}
@@ -109,23 +109,26 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 
 			$amount_paid = 0 - WC_Lightrail_Currency::lightrail_currency_minor_to_major( $transaction_result_object[ WC_Lightrail_API_Constants::TRANSACTION_VALUE ], $currency );
 			$code_rep    = '****' . substr( $code, - 4 );
-			$note        = 'Gift Code ' . $code_rep;
+			$notes       = array();
+			array_push( $notes, 'Gift Code ' . $code_rep );
+
 
 			$transaction_breakdown = $transaction_result_object[ WC_Lightrail_API_Constants::TRANSACTION_BREAKDOWN ];
-			//if ( sizeof( $transaction_breakdown ) > 1 ) {//there are promotions
-			$value_stores = self::get_card_details_by_code( $code );
-			foreach ( $transaction_breakdown as $value_store_ref ) {
-				$value            = 0 - WC_Lightrail_Currency::lightrail_currency_minor_to_major( $value_store_ref[ WC_Lightrail_API_Constants::TRANSACTION_VALUE ], $currency );
-				$value_store_id   = $value_store_ref[ WC_Lightrail_API_Constants::VALUE_STORE_ID ];
-				$value_store      = $value_stores[ $value_store_id ];
-				$value_store_type = lcfirst( strtolower( $value_store[ WC_Lightrail_API_Constants::CARD_DETAILS_VALUE_STORE_TYPE ] ) );
-				$note             = $note . '<br>' . $value . ' ' . $value_store_type;
-				if ( sizeof( $value_store[ WC_Lightrail_API_Constants::VALUE_STORES_RESTRICTIONS ] ) > 0 ) {
-					$comma_separated_restrictions = implode( ",", $value_store[ WC_Lightrail_API_Constants::VALUE_STORES_RESTRICTIONS ] );
-					$note                         = $note . '(' . $comma_separated_restrictions . ')';
+			if ( sizeof( $transaction_breakdown ) > 1 ) {//there are promotions
+				$value_stores = self::get_card_details_by_code( $code );
+				foreach ( $transaction_breakdown as $value_store_ref ) {
+					$value            = 0 - WC_Lightrail_Currency::lightrail_currency_minor_to_major( $value_store_ref[ WC_Lightrail_API_Constants::TRANSACTION_VALUE ], $currency );
+					$value_store_id   = $value_store_ref[ WC_Lightrail_API_Constants::VALUE_STORE_ID ];
+					$value_store      = $value_stores[ $value_store_id ];
+					$value_store_type = lcfirst( strtolower( $value_store[ WC_Lightrail_API_Constants::CARD_DETAILS_VALUE_STORE_TYPE ] ) );
+					$note_line        = get_woocommerce_currency_symbol() . $value . ' ' . $value_store_type;
+					if ( sizeof( $value_store[ WC_Lightrail_API_Constants::VALUE_STORES_RESTRICTIONS ] ) > 0 ) {
+						$comma_separated_restrictions = implode( ",", $value_store[ WC_Lightrail_API_Constants::VALUE_STORES_RESTRICTIONS ] );
+						$note_line                    = $note_line . ' (' . $comma_separated_restrictions . ')';
+					}
+					array_push( $notes, $note_line );
 				}
 			}
-			//}
 
 
 			//create a pending payment record object and add it to the order
@@ -133,7 +136,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD => WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE          => $amount_paid,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE           => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT,
-				WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE           => $note,
+				WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE           => $notes,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_ID             => $transaction_id,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_RAW_OBJECT     => $transaction_result_object,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS         => WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_PENDING,
@@ -205,8 +208,8 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD          => WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE                   => 0 - $refund_value,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE                    => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND,
-				WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE                    => sprintf( __( 'gift code ****%s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $refund_result_object['codeLastFour'] ),
-				WC_Lightrail_Metadata_Constants::TRANSACTION_ID                      => $refund_result_object['transactionId'],
+				WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE                    => array( sprintf( __( 'gift code ****%s', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $refund_result_object[ WC_Lightrail_API_Constants::TRANSACTION_CODE_LAST_FOUR ] ) ),
+				WC_Lightrail_Metadata_Constants::TRANSACTION_ID                      => $refund_result_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ],
 				WC_Lightrail_Metadata_Constants::TRANSACTION_ORIGINAL_TRANSACTION_ID => $original_transaction_object[ WC_Lightrail_API_Constants::TRANSACTION_ID ],
 				WC_Lightrail_Metadata_Constants::TRANSACTION_RAW_OBJECT              => $refund_result_object,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS                  => WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_CAPTURED,
@@ -243,7 +246,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 						WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE                   => 0 - $refund_value,
 						WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE                    => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND,
 						WC_Lightrail_Metadata_Constants::TRANSACTION_ORIGINAL_TRANSACTION_ID => $transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_ID ],
-						WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE                    => sprintf( __( 'Refund for %s ', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $order->get_transaction_id() ),
+						WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE                    => array( sprintf( __( 'Refund for %s ', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ), $order->get_transaction_id() ) ),
 						WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS                  => WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_CAPTURED,
 					);
 					WC_Lightrail_Metadata::add_order_transaction( $order, $refund_object );
@@ -271,7 +274,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD => $payment_method,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE          => $amount,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE           => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT,
-				WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE           => '',
+				WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE           => array( '' ),
 				WC_Lightrail_Metadata_Constants::TRANSACTION_ID             => $transaction_id,
 				WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS         => WC_Lightrail_Metadata_Constants::TRANSACTION_STATUS_CAPTURED,
 			);

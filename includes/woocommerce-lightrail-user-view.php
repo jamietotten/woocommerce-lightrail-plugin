@@ -49,7 +49,8 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 				$payment_method = 'Gift Card'; //remove lightrail name from customer-facing interface
 			}
 
-			$note_string = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? '';
+			$notes = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? array();
+			$notes_string = implode( '<br>-', $notes);
 
 			$transaction_type_string = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? __( 'Payment', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
@@ -58,7 +59,7 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 				$payment_status_string,
 				$payment_method,
 				$transaction_type_string,
-				$note_string );
+				$notes_string );
 
 			return array(
 				'label' => $line_item_label,
