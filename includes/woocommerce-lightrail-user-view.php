@@ -49,12 +49,12 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			}
 
 			$notes = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? array();
-			$notes_string = implode( '<br>-', $notes);
+			$notes_string = implode( '<br>*', $notes);
 
 			$transaction_type_string = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? __( 'Payment', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
 				: __( 'Refund', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-			$line_item_label         = sprintf( "%s %s %s<br>%s",
+			$line_item_label         = sprintf( "%s %s %s<br> <small>%s </small>",
 				$payment_status_string,
 				$payment_method,
 				$transaction_type_string,

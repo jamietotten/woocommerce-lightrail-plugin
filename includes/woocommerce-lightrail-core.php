@@ -35,10 +35,6 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 		}
 
 		private static function post_transaction_by_code( string $code, int $amount, string $currency, string $userSuppliedId, string $api_key, array $metadata, bool $dryrun, bool $pending ) {
-			// Optional crash, for testing purposes
-			self::please_crash( __FUNCTION__ );
-
-			//Business as usual
 			$post_transaction_body = array(
 				WC_Lightrail_API_Constants::TRANSACTION_USER_SUPPLIED_ID => $userSuppliedId,
 				WC_Lightrail_API_Constants::TRANSACTION_VALUE            => $amount,
@@ -56,10 +52,6 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 		}
 
 		public static function refund_transaction( array $original_transaction_object_returned_from_post_method, string $userSuppliedId, string $api_key ) {
-			// Optional crash, for testing purposes
-			self::please_crash( __FUNCTION__ );
-
-			//Business as usual
 			$cardId                  = $original_transaction_object_returned_from_post_method[ WC_Lightrail_API_Constants::TRANSACTION_CARD_ID ] ?? null;
 			$original_transaction_id = $original_transaction_object_returned_from_post_method[ WC_Lightrail_API_Constants::TRANSACTION_ID ] ?? null;
 
@@ -80,19 +72,10 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 		}
 
 		public static function void_pending_transaction( array $original_transaction_object_returned_from_post_method, string $userSuppliedId, string $api_key ) {
-			// Optional crash, for testing purposes
-			self::please_crash( __FUNCTION__ );
-
-			//Business as usual
 			return self::handle_pending_transaction( $original_transaction_object_returned_from_post_method, $userSuppliedId, WC_Lightrail_API_Constants::TRANSACTION_PENDING_VOID, $api_key );
-
 		}
 
 		public static function capture_pending_transaction( array $original_transaction_object_returned_from_post_method, string $userSuppliedId, string $api_key ) {
-			// Optional crash, for testing purposes
-			self::please_crash( __FUNCTION__ );
-
-			//Business as usual
 			return self::handle_pending_transaction( $original_transaction_object_returned_from_post_method, $userSuppliedId, WC_Lightrail_API_Constants::TRANSACTION_PENDING_CAPTURE, $api_key );
 		}
 
@@ -109,7 +92,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				}
 			} else {
 				// Handle WP_Error or non-200 HTTP response
-				write_log( 'error:'.wp_remote_retrieve_response_code( $response ) );
+				write_log( 'error:' . wp_remote_retrieve_response_code( $response ) );
 
 				$calledByFunction   = self::getCallerAndCallerArgs()[0];
 				$callerFunctionArgs = self::getCallerAndCallerArgs()[1];
@@ -133,14 +116,13 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				return wp_safe_remote_post( WC_Lightrail_API_Configs::API_BASE_URL . $endpoint,
 					array(
 						WC_Lightrail_API_Constants::HTTP_HEADERS => self::build_headers( $api_key ),
-						WC_Lightrail_API_Constants::HTTP_BODY    => json_encode( $body),
+						WC_Lightrail_API_Constants::HTTP_BODY    => json_encode( $body ),
 					)
 				);
 			}
 
 			// If something besides GET or POST was passed in, log it
 			write_log( self::get_printable_error_info( __FUNCTION__, func_get_args() ) );
-
 			return;
 		}
 
@@ -171,22 +153,8 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				$error_info = self::get_printable_error_info( __FUNCTION__, func_get_args(), [], $custom_message = sprintf( "The method 'handle_pending_transaction()' was called on a transaction object that was missing either the cardId key ('%s') or the transactionId key ('%s')", $cardId, $original_transaction_id ) );
 				write_log( $error_info );
 				throw new Exception ( $error_info );
-
-			}
-
-		}
-
-		private static function please_crash( string $method_name ) {
-			if ( WC_Lightrail_API_Configs::WE_ARE_TESTING ) {
-				if ( rand( 0, 100 ) <= WC_Lightrail_API_Configs::FAILURE_RATE ) {
-					write_log( "Here's the crash you ordered from " . $method_name );
-					throw new Exception( 'A crash? No problem. Served up fresh from ' . $method_name );
-				}
-			} else {
-				return;
 			}
 		}
-
 
 		private static function get_printable_error_info( string $method_name, array $parameters = [], $http_response_or_wp_error = [], string $custom_message = '' ) {
 			$error_info = sprintf( 'ERRORS: %s ', $custom_message );

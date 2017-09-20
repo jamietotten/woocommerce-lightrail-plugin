@@ -120,7 +120,10 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 					$value            = 0 - WC_Lightrail_Currency::lightrail_currency_minor_to_major( $value_store_ref[ WC_Lightrail_API_Constants::TRANSACTION_VALUE ], $currency );
 					$value_store_id   = $value_store_ref[ WC_Lightrail_API_Constants::VALUE_STORE_ID ];
 					$value_store      = $value_stores[ $value_store_id ];
-					$value_store_type = lcfirst( strtolower( $value_store[ WC_Lightrail_API_Constants::CARD_DETAILS_VALUE_STORE_TYPE ] ) );
+					$value_store_type = ucfirst( strtolower( $value_store[ WC_Lightrail_API_Constants::CARD_DETAILS_VALUE_STORE_TYPE ] ) );
+					if ($value_store_type == 'Attached') {
+						$value_store_type .= ' Promotion';
+					}
 					$note_line        = get_woocommerce_currency_symbol() . $value . ' ' . $value_store_type;
 					if ( sizeof( $value_store[ WC_Lightrail_API_Constants::VALUE_STORES_RESTRICTIONS ] ) > 0 ) {
 						$comma_separated_restrictions = implode( ",", $value_store[ WC_Lightrail_API_Constants::VALUE_STORES_RESTRICTIONS ] );

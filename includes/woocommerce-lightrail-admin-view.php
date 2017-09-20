@@ -43,7 +43,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 			$transaction_type_string   = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND )
 				? ' Refund via ' : ' ';
 			$notes              = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? array();
-			$notes_string = implode( '<br>-', $notes);
+			$notes_string = implode( '<br>*', $notes);
 
 			$payment_amount_string     = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? '(' . wc_price( $amount ) . ')' : wc_price( 0 - $amount );

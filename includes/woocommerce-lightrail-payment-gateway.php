@@ -76,7 +76,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 					'title'       => __( 'Gift Code', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 					'type'        => 'text',
 					'required'    => true,
-					'placeholder' => 'GFBT-xxxxx-xxxxx-xxxxx-xxxxx',
+					'placeholder' => 'xxxx-xxxxx-xxxxx-xxxxx-xxxxx',
 					'label'       => __( 'Enter your Gift code here', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ),
 					'default'     => '',
 				)
