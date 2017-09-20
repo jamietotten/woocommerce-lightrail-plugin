@@ -65,7 +65,7 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 			$order_payments_array = WC_Lightrail_Metadata::get_order_transactions_in_which( $order, array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) );
 			$order_refunds_array  = WC_Lightrail_Metadata::get_order_transactions_in_which( $order, array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
 
-			write_log( sprintf( 'total of %d transactions on order %s', count( WC_Lightrail_Metadata::get_order_transactions( $order ) ), $order_id ) . json_encode( WC_Lightrail_Metadata::get_order_transactions( $order ) ) );
+			//write_log( sprintf( 'total of %d transactions on order %s', count( WC_Lightrail_Metadata::get_order_transactions( $order ) ), $order_id ) . json_encode( WC_Lightrail_Metadata::get_order_transactions( $order ) ) );
 
 			foreach ( $order_payments_array as $order_transaction_object ) {
 				WC_Lightrail_Admin::get_admin_row_for_transaction_object( $order_transaction_object );

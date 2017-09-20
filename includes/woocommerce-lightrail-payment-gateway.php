@@ -135,7 +135,7 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 						'redirect' => $this->get_return_url( $order ),
 					);
 				} else { //we're not done paying. go back to the payment page to pay the remaining balance.
-					write_log( sprintf( 'remaining balance on order #%s: %s', $order->get_id(), WC_Lightrail_Metadata::get_order_balance( $order ) ) );
+					//write_log( sprintf( 'remaining balance on order #%s: %s', $order->get_id(), WC_Lightrail_Metadata::get_order_balance( $order ) ) );
 					$order->set_total( WC_Lightrail_Metadata::get_order_balance( $order ) );
 					$order->save();
 

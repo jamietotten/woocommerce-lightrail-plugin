@@ -110,7 +110,6 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 			} else {
 				// Handle WP_Error or non-200 HTTP response
 				write_log( 'error:'.wp_remote_retrieve_response_code( $response ) );
-				write_log(  $response[ WC_Lightrail_API_Constants::API_RESPONSE_KEY_BODY ] );
 				//				$decoded_response = json_decode( $response[ WC_Lightrail_API_Constants::API_RESPONSE_KEY_BODY ], true ) ?? [];
 
 				$calledByFunction   = self::getCallerAndCallerArgs()[0];
