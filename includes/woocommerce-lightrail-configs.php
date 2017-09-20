@@ -5,6 +5,6 @@ if ( ! class_exists( 'WC_Lightrail_API_Configs' ) ) {
 		const WEB_APP_CARD_DETAILS_URL = 'https://www.lightrail.com/app/#/cards/details/%s';
 
 		const API_VERSION = '1.0';
-		const PLUGIN_VERSION = '1.0';
+		const PLUGIN_VERSION = '2.0';
 	}
 }
