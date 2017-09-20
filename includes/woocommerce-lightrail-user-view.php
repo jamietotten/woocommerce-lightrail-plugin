@@ -37,7 +37,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			return $formatted_total;
 		}
 
-
 		private static function get_row_for_transaction_object( $order_transaction_object ) {
 
 			$payment_amount        = $order_transaction_object [ WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE ];
@@ -77,7 +76,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 					array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) );
 				$order_refunds_array  = WC_Lightrail_Metadata::get_order_transactions_in_which( $order,
 					array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
-
 
 				$row_counter = 0;
 				foreach ( $order_payments_array as $order_transaction_object ) { //first all the payments
@@ -148,7 +146,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			}
 
 		}
-
 
 		public static function pay_order_button_html_add_cancel( $buttons_html_code ) {
 			$order_id         = get_query_var( 'order-pay', 0 );

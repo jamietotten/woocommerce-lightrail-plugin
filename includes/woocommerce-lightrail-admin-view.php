@@ -30,14 +30,11 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 				);
 			}
 
-
 			add_action( 'woocommerce_admin_order_totals_after_total', 'WC_Lightrail_Admin::admin_order_totals_after_total_add_payments_and_refunds', 10, 1 );
 			add_action( 'woocommerce_order_item_add_action_buttons', 'WC_Lightrail_Admin::order_item_add_action_buttons_frefund', 100, 1 );
 			add_action( 'wp_ajax_frefund', 'WC_Lightrail_Admin::frefund_action' );
 			add_action( 'woocommerce_order_item_add_action_buttons', 'WC_Lightrail_Admin::order_item_add_action_buttons_retry', 100, 1 );
 			add_action( 'wp_ajax_retry', 'WC_Lightrail_Admin::retry_action' );
-
-
 		}
 
 		private static function get_admin_row_for_transaction_object( $order_transaction_object ) {
@@ -55,7 +52,6 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 						<td class="label">' . $transaction_status_string . $transaction_type_string . $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD ] . ' '. $notes_string . ':' . '</td><td width="1%"></td>
 						<td class="total">' . $payment_amount_string . '</td>
 				  </tr>';
-
 		}
 
 		public static function admin_order_totals_after_total_add_payments_and_refunds( $order_id ) {
@@ -64,8 +60,6 @@ if ( ! class_exists( 'WC_Lightrail_Admin' ) ) {
 
 			$order_payments_array = WC_Lightrail_Metadata::get_order_transactions_in_which( $order, array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) );
 			$order_refunds_array  = WC_Lightrail_Metadata::get_order_transactions_in_which( $order, array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
-
-			//write_log( sprintf( 'total of %d transactions on order %s', count( WC_Lightrail_Metadata::get_order_transactions( $order ) ), $order_id ) . json_encode( WC_Lightrail_Metadata::get_order_transactions( $order ) ) );
 
 			foreach ( $order_payments_array as $order_transaction_object ) {
 				WC_Lightrail_Admin::get_admin_row_for_transaction_object( $order_transaction_object );

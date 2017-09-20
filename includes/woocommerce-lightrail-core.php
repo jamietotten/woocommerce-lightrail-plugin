@@ -34,7 +34,7 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 			return self::post_transaction_by_code( $code, $amount, $currency, $userSuppliedId, $api_key, $metadata, true, false );
 		}
 
-		private static function post_transaction_by_code( string $code, int $amount, string $currency, string $userSuppliedId, string $api_key, array $metadata = [], bool $dryrun, bool $pending ) {
+		private static function post_transaction_by_code( string $code, int $amount, string $currency, string $userSuppliedId, string $api_key, array $metadata, bool $dryrun, bool $pending ) {
 			// Optional crash, for testing purposes
 			self::please_crash( __FUNCTION__ );
 
@@ -110,7 +110,6 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 			} else {
 				// Handle WP_Error or non-200 HTTP response
 				write_log( 'error:'.wp_remote_retrieve_response_code( $response ) );
-				//				$decoded_response = json_decode( $response[ WC_Lightrail_API_Constants::API_RESPONSE_KEY_BODY ], true ) ?? [];
 
 				$calledByFunction   = self::getCallerAndCallerArgs()[0];
 				$callerFunctionArgs = self::getCallerAndCallerArgs()[1];
@@ -134,7 +133,6 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 				return wp_safe_remote_post( WC_Lightrail_API_Configs::API_BASE_URL . $endpoint,
 					array(
 						WC_Lightrail_API_Constants::HTTP_HEADERS => self::build_headers( $api_key ),
-//						WC_Lightrail_API_Constants::HTTP_BODY    => json_encode( $body, JSON_FORCE_OBJECT ),
 						WC_Lightrail_API_Constants::HTTP_BODY    => json_encode( $body),
 					)
 				);

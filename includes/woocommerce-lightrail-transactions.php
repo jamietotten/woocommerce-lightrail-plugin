@@ -130,7 +130,6 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 				}
 			}
 
-
 			//create a pending payment record object and add it to the order
 			$payment_transaction_object = array(
 				WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD => WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME,
