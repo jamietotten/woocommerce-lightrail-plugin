@@ -46,18 +46,15 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			$payment_method = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD ];
 
 			if ( WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME === $payment_method ) {
-				$payment_method = 'Gift Code'; //remove lightrail name from customer-facing interface
+				$payment_method = 'Gift Card'; //remove lightrail name from customer-facing interface
 			}
 
 			$note_string = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? '';
 
-			if ( '' !== $note_string ) {
-				$note_string = ' (' . $note_string . ')';
-			}
 			$transaction_type_string = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? __( 'Payment', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
 				: __( 'Refund', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-			$line_item_label         = sprintf( "%s %s %s%s",
+			$line_item_label         = sprintf( "%s %s %s<br>%s",
 				$payment_status_string,
 				$payment_method,
 				$transaction_type_string,

@@ -19,6 +19,12 @@ if ( ! class_exists( 'WC_LightrailEngine' ) ) {
 			return self::handle_api_response( $response, WC_Lightrail_API_Constants::API_RESPONSE_KEY_USER );
 		}
 
+		public static function get_card_details_by_code( string $code, string $api_key ) {
+			$response = self::call_lightrail_api_with_headers( sprintf( WC_Lightrail_API_Constants::ENDPOINT_CODE_CARD_DETAILS, $code ), WC_Lightrail_API_Constants::HTTP_GET, $api_key );
+
+			return self::handle_api_response( $response, WC_Lightrail_API_Constants::API_RESPONSE_KEY_DETAILS );
+		}
+
 		//NOTE parameter $amount must be negative
 		public static function post_pending_transaction_by_code( string $code, int $amount, string $currency, string $userSuppliedId, string $api_key, array $metadata = [] ) {
 			return self::post_transaction_by_code( $code, $amount, $currency, $userSuppliedId, $api_key, $metadata, false, true );
