@@ -72,7 +72,7 @@ Option 3 - By SFTP:
 
 In order to connect with the Lightrail API, the plugin needs valid Lightrail API keys. You can generate API keys in your  [Lightrail dashboard](https://www.lightrail.com/app/#/login): click your user badge in the top right corner, go to `Account Settings`, and then click on `API Keys`.
 
-Once you created an API key, enter it in the Lightrail for WooCommerce settings page. The settings are in `WooCommerce` > `Settings` > `Checkout` tab where you can scroll down to the bottom of the page under `Payment Gateways ` and find `Gift Code` by Lightrail.
+Once you have created an API key, enter it in the Lightrail for WooCommerce settings page. The settings are in the `WooCommerce` > `Settings` > `Checkout` tab where you can scroll down to the bottom of the page under `Payment Gateways ` and find `Gift Code` by Lightrail.
 Alternatively, you can directly go to the settings page by clicking on the `Settings` link under Lightrail for WooCommerce plugin name on Wordpress `Plugins` page.
 
 == WooCommerce Coupons ==
