@@ -11,9 +11,9 @@ WC tested up to: 3.1.2
 Acquire and retain customers using account credits, gift cards, promotions, and points.
 
 == Description ==
-Lightrail for WooCommerce allows Lightrail’s gift codes to be redeemed in your WooCommerce checkout. You can view & track gift code redemptions and also issue gift code refunds from your WordPress dashboard.
+Lightrail for WooCommerce allows Lightrail’s Gift Cards to be redeemed in your WooCommerce checkout. You can view and track Gift Card redemptions and also issue Gift Card refunds from your WooCommerce dashboard.
 
-Lightrail is a modern platform for digital account credits, gift cards, promotions and points—made for customer acquisition and retention.
+Lightrail is a modern platform for digital account credits, gift cards, promotions, and points—made for customer acquisition and retention.
 
 To learn more, visit [Lightrail](https://www.lightrail.com/).
 
@@ -21,20 +21,21 @@ To learn more, visit [Lightrail](https://www.lightrail.com/).
 
 * Get a Lightrail account [here](https://www.lightrail.com/)
 * Install plugin
-* Generate and download gift codes from Lightrail
-* Distribute your WooCommerce-ready gift codes to customers
+* Create and download Gift Card codes from Lightrail
+* Distribute your WooCommerce-ready Gift Cards codes to customers
 
-To connect the plugin with your Lightrail account to process gift cards, you will need to enter your Lightrail API key in the plugin settings as detailed below.
+To connect the plugin with your Lightrail account to process Gift Cards, you will need to enter your Lightrail API key in the plugin settings as detailed below.
 
 == Features ==
-The following features are supported in the current version (1.0.2) of this plugin:
+The following features are supported in the current version (2.0.0) of this plugin:
 
-* Pay for an order by a gift code.
-* Split payment on an order using a gift code and another payment method.
-* Pay for an order using more than one gift code.
-* Cancel an order by the customer after attempting to pay with a gift code, if the order balance exceeds the value of the gift code.
-* Issue full order refund by the store admin when an order is paid by a gift code.
+* Pay for an order by a Gift Card.
+* Split payment on an order using a Gift Card and another payment method.
+* Pay for an order using more than one Gift Card.
+* Cancel an order by the customer after attempting to pay with a Gift Card, if the order balance exceeds the value of the Card.
+* Issue full order refund by the store admin when an order is paid by a Gift Card.
 * Detailed log of all the transactions on an order for the store admin.
+* Use Gift Cards with Lightrail Attached Promotions including Promotions with Redemption Rules.
 
 The current version of this plugin has been tested to work seamlessly with Stripe, PayPal Standard, and CardConnect WooCommerce plugins.
 
@@ -69,20 +70,20 @@ Option 3 - By SFTP:
 
 = Set Up Lightrail Payment Gateway =
 
-In order to connect with the Lightrail API, the plugin needs valid Lightrail API keys. You can find your API key in your  [Lightrail dashboard](https://www.lightrail.com/app/#/login): Go to `Account Settings`, click your user badge in the top right corner, and then click on `API`.
+In order to connect with the Lightrail API, the plugin needs valid Lightrail API keys. You can generate API keys in your  [Lightrail dashboard](https://www.lightrail.com/app/#/login): click your user badge in the top right corner, go to `Account Settings`, and then click on `API Keys`.
 
-Once you found your API key, enter it in the Lightrail for WooCommerce settings page. The settings are in `WooCommerce` > `Settings` > `Checkout` tab where you can scroll down to the bottom of the page under `Payment Gateways ` and find `Gift Code` by Lightrail.
+Once you created an API key, enter it in the Lightrail for WooCommerce settings page. The settings are in `WooCommerce` > `Settings` > `Checkout` tab where you can scroll down to the bottom of the page under `Payment Gateways ` and find `Gift Code` by Lightrail.
 Alternatively, you can directly go to the settings page by clicking on the `Settings` link under Lightrail for WooCommerce plugin name on Wordpress `Plugins` page.
 
 == WooCommerce Coupons ==
 
-To avoid confusion on the checkout page, if you are using Lightrail gift codes, we strongly recommend that you disable WooCommerce coupons. You can disable WooCommerce default coupons by going to `WooCommerce` >` Settings` > `Checkout` tab > `Checkout` options and unchecking the checkbox `Enable the use of coupons`.
+To avoid confusion on the checkout page, if you are using Lightrail Gift Cards, we strongly recommend that you disable WooCommerce coupons. You can disable WooCommerce default coupons by going to `WooCommerce` >` Settings` > `Checkout` tab > `Checkout` options and unchecking the checkbox `Enable the use of coupons`.
 
 == Screenshots ==
 
 1. Create and download gift card codes from Lightrail to send to your customers.
 2. After installing Lightrail for WooCommerce, Lightrail codes are redeemable in your WooCommerce checkout.
-3. View Lightrail gift code redemption details in your WordPress dashboard.
+3. View Lightrail Gift Card redemption details in your WordPress dashboard.
 4. Lightrail for WooCommerce also supports refunds.
 5. Track individual card details and transactions in Lightrail.
 
