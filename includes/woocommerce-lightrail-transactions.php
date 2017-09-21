@@ -52,7 +52,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			return sprintf( '<a href="%s">%s</a>', $link, $display_text );
 		}
 
-		public static function get_gift_code_balance( $code, $order, $amount, $order_currency ) {
+		public static function get_gift_code_balance( $code, $order, $up_to_this_amount, $order_currency ) {
 
 			if ( '' === $code ) {
 				throw new Exception( __( 'No gift code was provided.', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE ) );
@@ -62,7 +62,7 @@ if ( ! class_exists( 'WC_Lightrail_Transactions' ) ) {
 			try {
 				$dryrun_result_object   = WC_LightrailEngine::post_dryrun_transaction_by_code(
 					$code,
-					( 0 - WC_Lightrail_Currency::lightrail_currency_major_to_minor( $amount, $order_currency ) ),
+					( 0 - WC_Lightrail_Currency::lightrail_currency_major_to_minor( $up_to_this_amount, $order_currency ) ),
 					$order_currency,
 					uniqid( 'woo_' ),
 					$lightrail_api_key,
