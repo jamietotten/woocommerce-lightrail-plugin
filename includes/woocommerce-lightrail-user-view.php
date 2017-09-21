@@ -37,7 +37,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			return $formatted_total;
 		}
 
-
 		private static function get_row_for_transaction_object( $order_transaction_object ) {
 
 			$payment_amount        = $order_transaction_object [ WC_Lightrail_Metadata_Constants::TRANSACTION_VALUE ];
@@ -46,22 +45,20 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			$payment_method = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_PAYMENT_METHOD ];
 
 			if ( WC_Lightrail_Plugin_Constants::LIGHTRAIL_PAYMENT_METHOD_NAME === $payment_method ) {
-				$payment_method = 'Gift Code'; //remove lightrail name from customer-facing interface
+				$payment_method = 'Gift Card'; //remove lightrail name from customer-facing interface
 			}
 
-			$note_string = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? '';
+			$notes = $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_NOTE ] ?? array();
+			$notes_string = implode( '<br>*', $notes);
 
-			if ( '' !== $note_string ) {
-				$note_string = ' (' . $note_string . ')';
-			}
 			$transaction_type_string = ( $order_transaction_object[ WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE ] === WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT )
 				? __( 'Payment', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE )
 				: __( 'Refund', WC_Lightrail_Plugin_Constants::LIGHTRAIL_NAMESPACE );
-			$line_item_label         = sprintf( "%s %s %s%s",
+			$line_item_label         = sprintf( "%s %s %s<br> <small>%s </small>",
 				$payment_status_string,
 				$payment_method,
 				$transaction_type_string,
-				$note_string );
+				$notes_string );
 
 			return array(
 				'label' => $line_item_label,
@@ -79,7 +76,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 					array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_PAYMENT ) );
 				$order_refunds_array  = WC_Lightrail_Metadata::get_order_transactions_in_which( $order,
 					array( WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE => WC_Lightrail_Metadata_Constants::TRANSACTION_TYPE_REFUND ) );
-
 
 				$row_counter = 0;
 				foreach ( $order_payments_array as $order_transaction_object ) { //first all the payments
@@ -150,7 +146,6 @@ if ( ! class_exists( 'WC_Lightrail_User' ) ) {
 			}
 
 		}
-
 
 		public static function pay_order_button_html_add_cancel( $buttons_html_code ) {
 			$order_id         = get_query_var( 'order-pay', 0 );

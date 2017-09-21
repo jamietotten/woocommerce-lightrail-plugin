@@ -56,6 +56,12 @@ if ( ! class_exists( 'WC_Lightrail_API_Constants' ) ) {
 		const TRANSACTION_PENDING_CAPTURE = 'capture';
 		const TRANSACTION_PENDING_VOID = 'void';
 		const TRANSACTION_CODE_LAST_FOUR = 'codeLastFour';
+		const TRANSACTION_NSF = 'nsf';
+		const TRANSACTION_BREAKDOWN = 'transactionBreakdown';
+		const VALUE_STORE_ID = 'valueStoreId';
+		const CARD_DETAILS_VALUE_STORES = 'valueStores';
+		const CARD_DETAILS_VALUE_STORE_TYPE = 'valueStoreType';
+		const VALUE_STORES_RESTRICTIONS = 'restrictions';
 
 		const CODE_CURRENCY = 'currency';
 		const CODE_PRINCIPAL = 'principal';
@@ -67,14 +73,15 @@ if ( ! class_exists( 'WC_Lightrail_API_Constants' ) ) {
 
 
 		const ENDPOINT_PING = '/ping';
-		const ENDPOINT_BALANCE = '/codes/%s/balance/details';
 		const ENDPOINT_CODE_TRANSACTION = '/codes/%s/transactions';
+		const ENDPOINT_CODE_CARD_DETAILS = '/codes/%s/details';
+		const ENDPOINT_CODE_TRANSACTION_DRYRUN = '/codes/%s/transactions/dryRun';
 		const ENDPOINT_REFUND = '/cards/%s/transactions/%s/refund';
 		const ENDPOINT_HANDLE_PENDING = '/cards/%s/transactions/%s/%s';
 
 		const API_RESPONSE_KEY_BODY = 'body';
 		const API_RESPONSE_KEY_USER = 'user';
-		const API_RESPONSE_KEY_BALANCE = 'balance';
+		const API_RESPONSE_KEY_DETAILS = 'details';
 		const API_RESPONSE_KEY_TRANSACTION = 'transaction';
 	}
 }

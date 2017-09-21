@@ -2,11 +2,11 @@
 Contributors: lightrailintegrations
 Tags: woocommerce, giftcard
 Requires at least: 4.7
-Tested up to: 4.8
+Tested up to: 4.8.2
 Stable tag: trunk
 License: GPL2
 WC requires at least: 3.0
-WC tested up to: 3.1
+WC tested up to: 3.1.2
 
 Acquire and retain customers using account credits, gift cards, promotions, and points.
 
@@ -87,6 +87,9 @@ To avoid confusion on the checkout page, if you are using Lightrail gift codes, 
 5. Track individual card details and transactions in Lightrail.
 
 == Changelog ==
+
+= 2.0.0 =
+* Support for Lightrail conditional Promotions with redemption rules.
 
 = 1.0.2 =
 * Improvements to readme & assets for display in WordPress directory listing
