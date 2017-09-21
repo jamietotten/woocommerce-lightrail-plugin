@@ -8,12 +8,12 @@ License: GPL2
 WC requires at least: 3.0
 WC tested up to: 3.1.2
 
-Acquire and retain customers using account credits, gift cards, promotions, and points.
+Acquire and retain customers using Account Credits, Gift Cards, Promotions, and Points.
 
 == Description ==
 Lightrail for WooCommerce allows Lightrail’s Gift Cards to be redeemed in your WooCommerce checkout. You can view and track Gift Card redemptions and also issue Gift Card refunds from your WooCommerce dashboard.
 
-Lightrail is a modern platform for digital account credits, gift cards, promotions, and points—made for customer acquisition and retention.
+Lightrail is a modern platform for digital account credits, Gift Cards, Promotions, and Points—made for customer acquisition and retention.
 
 To learn more, visit [Lightrail](https://www.lightrail.com/).
 
@@ -81,7 +81,7 @@ To avoid confusion on the checkout page, if you are using Lightrail Gift Cards, 
 
 == Screenshots ==
 
-1. Create and download gift card codes from Lightrail to send to your customers.
+1. Create and download Gift Card codes from Lightrail to send to your customers.
 2. After installing Lightrail for WooCommerce, Lightrail codes are redeemable in your WooCommerce checkout.
 3. View Lightrail Gift Card redemption details in your WordPress dashboard.
 4. Lightrail for WooCommerce also supports refunds.
