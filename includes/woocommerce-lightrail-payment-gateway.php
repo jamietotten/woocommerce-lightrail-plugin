@@ -103,10 +103,6 @@ if ( ! class_exists( 'WC_Gateway_Lightrail' ) && class_exists( 'WC_Payment_Gatew
 				$order_currency = get_option( 'woocommerce_currency' );
 
 				$amount_to_charge = WC_Lightrail_Transactions::get_gift_code_balance( $code, $order, $total, $order_currency );
-
-//				//if there is not enough credit we will pay what we can with the code and go back to the payment page for paying the remainder
-//				$amount_to_charge = ( $available_credit < $total ) ? $available_credit : $total;
-
 				WC_Lightrail_Transactions::post_pending_payment_transaction_by_code( $order, $code, $amount_to_charge, $order_currency );
 				$new_balance = WC_Lightrail_Metadata::get_order_balance( $order );
 
